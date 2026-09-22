@@ -1,0 +1,19 @@
+# Editor-agnostic baseline. The formatting contract for Scala lives in
+# .scalafmt.conf; this only covers what every editor can honour on its own.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+max_line_length = 100
+
+# Two trailing spaces are a hard line break in Markdown.
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{sh,ps1}]
+indent_size = 2

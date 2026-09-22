@@ -1,0 +1,18 @@
+package typeprog.{{PACKAGE}}
+
+import typeprog.core.{TypeLevelSuite, evidence}
+
+/** Every assertion here must compile against the *unsolved* stub — the whole
+  * point of `Unsolved` is that an unfinished exercise stays compilable. Any
+  * claim that only type-checks once the exercise is solved goes inside an
+  * `assertTypeChecks` snippet, never into the test body as plain code.
+  */
+class Exercise{{EE}}Spec extends TypeLevelSuite:
+
+  test("TODO: the claim, stated as a sentence") {
+    assertTypeChecks("summon[Exercise{{EE}}.Answer =:= Unit]")
+  }
+
+  test("TODO: and the claim that must still be rejected") {
+    assertTypeError("summon[Exercise{{EE}}.Answer =:= Int]")
+  }

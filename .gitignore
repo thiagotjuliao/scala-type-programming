@@ -1,0 +1,42 @@
+# --- sbt / Scala build output ---
+target/
+project/target/
+project/project/
+.bloop/
+.bsp/
+.metals/
+metals.sbt
+*.class
+
+# --- IDE ---
+.idea/
+*.iml
+
+# `.vscode/` is mostly per-user state, but `settings.json` and
+# `extensions.json` are an environment contract — the editor configuration the
+# repository's conventions assume. They travel with the repository; everything
+# else in the directory does not.
+#
+# The pattern must be `.vscode/*`, not `.vscode/`: git does not descend into an
+# excluded directory, so a trailing-slash exclusion makes the negations below
+# unreachable.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Metals worksheets ---
+#
+# Exempt under modules/playground/: scratch worksheets are the point of that
+# module, and the ones worth keeping are kept.
+*.worksheet.sc
+!modules/playground/**/*.worksheet.sc
+
+# --- JVM crash / profiling artifacts ---
+hs_err_pid*.log
+replay_pid*.log
+*.hprof
+*.jfr
+
+# --- OS noise ---
+.DS_Store
+Thumbs.db

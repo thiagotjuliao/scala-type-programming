@@ -1,0 +1,86 @@
+{
+  // ---------------------------------------------------------------------------
+  // Build noise
+  // ---------------------------------------------------------------------------
+  "files.watcherExclude": {
+    "**/target/**": true,
+    "**/.bloop/**": true
+  },
+
+  // ---------------------------------------------------------------------------
+  // Build import
+  //
+  // At the default ("off") Metals asks permission before importing the build,
+  // through a prompt that is easy to miss. A workspace left in that state never
+  // imports at all: every open file only logs `no build target found`, and from
+  // the outside that is indistinguishable from an import that never finishes.
+  // "all" takes the prompt out of the loop.
+  // ---------------------------------------------------------------------------
+  "metals.autoImportBuilds": "all",
+
+  // ---------------------------------------------------------------------------
+  // Documentation rendering
+  //
+  // A sticky hover keeps the Metals-rendered Scaladoc open long enough to read
+  // instead of vanishing on mouse-out (Ctrl+K Ctrl+I opens it from the
+  // keyboard), and the Docs View panel keeps that same rendered Markdown
+  // permanently in the sidebar, following the cursor. In a repository where the
+  // doc comment on a solution is the most-read text in the chapter, both earn
+  // their keep.
+  // ---------------------------------------------------------------------------
+  "editor.hover.sticky": true,
+  "editor.hover.delay": 250,
+  "docsView.documentationView.updateMode": "live",
+
+  // Italic separates prose from code at a glance without relying on colour
+  // alone — which is what makes a long doc comment readable inside a file of
+  // dense type signatures.
+  "editor.tokenColorCustomizations": {
+    "comments": {
+      "fontStyle": "italic"
+    }
+  },
+
+  "editor.showFoldingControls": "always",
+  "editor.foldingHighlight": true,
+
+  // Mirrors .scalafmt.conf (maxColumn = 100).
+  "editor.rulers": [100],
+
+  // ---------------------------------------------------------------------------
+  // Formatting — scoped to Scala on purpose
+  //
+  // Metals formats through the workspace's own .scalafmt.conf, so save-time
+  // formatting produces exactly what `sbt scalafmtAll` produces and what the
+  // gate's `scalafmtCheckAll` verifies. Deliberately not global: the Markdown
+  // here is laid out by hand and a Markdown formatter would reflow all of it.
+  // ---------------------------------------------------------------------------
+  "[scala]": {
+    "editor.defaultFormatter": "scalameta.metals",
+    "editor.formatOnSave": true
+  },
+
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // A click opens a file, it does not audition it. The work here is
+  // cross-referencing — a stub beside its spec beside the solution — and under
+  // the preview-tab default the third file evicts the first.
+  "workbench.editor.enablePreview": false,
+
+  // Every Markdown file here is written to be read rendered. To edit one,
+  // reopen it as text: Ctrl+Shift+P → "Reopen Editor With..." → "Text Editor".
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  }
+}

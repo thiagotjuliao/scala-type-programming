@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.sbt text eol=lf
+*.scala text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=crlf
