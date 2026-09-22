@@ -67,8 +67,15 @@ function Test-Structure([string]$Tree) {
   $soMain = Join-Path $Tree "modules/solutions/src/main/scala/typeprog/$pkg"
   $soTest = Join-Path $Tree "modules/solutions/src/test/scala/typeprog/$pkg"
 
-  if (-not (Test-Path (Join-Path $exMain 'Walkthrough.scala'))) {
+  # A walkthrough left as the template passes `sbt verify` without trouble: it
+  # compiles, and it says nothing. The TODO the template ships with is what
+  # tells the two apart.
+  $walkthrough = Join-Path $exMain 'Walkthrough.scala'
+  if (-not (Test-Path $walkthrough)) {
     Write-Host "  missing: $pkg/Walkthrough.scala"; $ok = $false
+  }
+  elseif (Select-String -Path $walkthrough -Pattern 'TODO' -Quiet) {
+    Write-Host "  unfinished: $pkg/Walkthrough.scala is still the template"; $ok = $false
   }
 
   $exercises = @(Get-ChildItem $exMain -Filter 'Exercise*.scala' -ErrorAction SilentlyContinue)

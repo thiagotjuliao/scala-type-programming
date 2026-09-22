@@ -78,7 +78,14 @@ check_structure() { # <tree>
   so_main="$tree/modules/solutions/src/main/scala/typeprog/$PKG"
   so_test="$tree/modules/solutions/src/test/scala/typeprog/$PKG"
 
-  [[ -f "$ex_main/Walkthrough.scala" ]] || { echo "  missing: $PKG/Walkthrough.scala"; ok=0; }
+  # A walkthrough left as the template passes `sbt verify` without trouble: it
+  # compiles, and it says nothing. The TODO the template ships with is what
+  # tells the two apart.
+  if [[ ! -f "$ex_main/Walkthrough.scala" ]]; then
+    echo "  missing: $PKG/Walkthrough.scala"; ok=0
+  elif grep -q 'TODO' "$ex_main/Walkthrough.scala"; then
+    echo "  unfinished: $PKG/Walkthrough.scala is still the template"; ok=0
+  fi
 
   shopt -s nullglob
   local exercises=("$ex_main"/Exercise*.scala)
@@ -143,8 +150,12 @@ else
     [[ -d "$d/scala/typeprog/$PKG" ]] && git add -- "$d/scala/typeprog/$PKG"
   done
   [[ -n "$DOC" ]] && git add -- "$DOC"
-  others="$(git status --porcelain --untracked-files=all -- . \
-    ':!'"$PKG_DIR" ':!*/scala/typeprog/'"$PKG" ${DOC:+':!'"$DOC"} | head -5)"
+  # Anything modified that is not part of this chapter. Filtered on the path
+  # rather than with a `:(exclude)` pathspec: an exclude pathspec that names a
+  # directory does not exclude the files *inside* it, so every staged file of
+  # this very chapter came back reported as left out of its own commit.
+  others="$(git status --porcelain --untracked-files=all |
+    { grep -v -e "/typeprog/$PKG/" ${DOC:+-e "$DOC"} || true; } | head -5)"
   if [[ -n "$others" ]]; then
     echo
     echo "heads up, left out of the commit (use --all to include):"

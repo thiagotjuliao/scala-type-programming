@@ -112,7 +112,10 @@ cat <<EOF
 The spec is the contract: write it first, from the theory document, and let it
 fail. Then the stub, then the solution.
 
-  sbt "exercises/testOnly typeprog.$PKG.*"    what is left to solve
-  sbt verify                                  what the tag will be held to
-  ./scripts/finish-chapter.sh $NN             close it
+  sbt "exercises/testOnly typeprog.$PKG.*"
+      what is left to solve
+  sbt verify
+      what the tag will be held to
+  ./scripts/finish-chapter.sh $NN
+      close it
 EOF

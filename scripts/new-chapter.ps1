@@ -96,7 +96,10 @@ Write-Host @"
 The spec is the contract: write it first, from the theory document, and let it
 fail. Then the stub, then the solution.
 
-  sbt "exercises/testOnly typeprog.$pkg.*"    what is left to solve
-  sbt verify                                  what the tag will be held to
-  ./scripts/finish-chapter.ps1 $nn            close it
+  sbt "exercises/testOnly typeprog.$pkg.*"
+      what is left to solve
+  sbt verify
+      what the tag will be held to
+  ./scripts/finish-chapter.ps1 $nn
+      close it
 "@
