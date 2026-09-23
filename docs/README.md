@@ -7,7 +7,7 @@ out of sequence.
 | # | chapter | covers | tag |
 | --- | --- | --- | --- |
 | 01 | [Type system foundations](theory/ch01-type-foundations.md) | subtyping, variance, bounds, type members, `=:=` / `<:<` | `ch01` |
-| 02 | Higher-kinded types & type lambdas | `F[_]`, kinds, `[X] =>> F[X]`, kind mismatch errors | |
+| 02 | [Higher-kinded types & type lambdas](theory/ch02-higher-kinds.md) | `F[_]`, kinds, `[X] =>> F[X]`, kind mismatch errors | `ch02` |
 | 03 | Path-dependent & dependent function types | `a.B`, `(x: A) => x.B`, when the value decides the type | |
 | 04 | Literal, singleton, union & intersection types | `42` as a type, `A & B`, `A \| B`, `Matchable` | |
 | 05 | Opaque types & phantom newtypes | zero-cost wrappers, tagging, types with no values | |
