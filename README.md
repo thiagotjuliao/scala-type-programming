@@ -79,6 +79,25 @@ Under sbt 2 the plain `test` task is incremental: it runs what failed last
 time, what never ran, and what a changed dependency touched. That is what you
 want while working and useless as a gate, so `verify` uses `testFull`.
 
+## Handing in a solved chapter
+
+```bash
+./scripts/solve-chapter.sh 2 my-solutions
+```
+
+```powershell
+./scripts/solve-chapter.ps1 2 my-solutions
+```
+
+Commits your work on chapter 2's exercises as `solutions — chapter 02` and
+pushes it to `my-solutions`, switching to that branch first (or creating it
+from the current one). Only the chapter's exercise sources go into the commit;
+anything else modified is listed and left alone. As with `finish-chapter`, the
+check runs against the staged tree in `target/solve-chapter/`: formatting, and
+every spec of the chapter green. A chapter that is not solved yet is not
+committed. `main` is refused — solutions pushed there would reach every other
+learner along with the next chapter. `--no-push` (`-NoPush`) stops at the commit.
+
 ## Starting a new chapter
 
 ```bash
