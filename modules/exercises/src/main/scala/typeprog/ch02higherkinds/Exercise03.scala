@@ -1,7 +1,5 @@
 package typeprog.ch02higherkinds
 
-import typeprog.core.Unsolved
-
 /** Exercise 03 — a functor over the other side.
   *
   * Exercise 02 fixed the left side of `Either` and mapped over the right. Do
@@ -21,7 +19,11 @@ import typeprog.core.Unsolved
 object Exercise03:
 
   /** TODO: replace `Unsolved` with `Either`, `E` on the right. */
-  type OnLeft[E] = [X] =>> Unsolved
+  type OnLeft[E] = [X] =>> Either[X, E]
 
   /** TODO: implement. */
-  def leftFunctor[E]: Functor[OnLeft[E]] = ???
+  def leftFunctor[E]: Functor[OnLeft[E]] = new Functor[OnLeft[E]]:
+    def map[A, B](fa: OnLeft[E][A])(f: A => B): OnLeft[E][B] =
+      fa match
+        case Right(e) => Right(e)
+        case Left(a) => Left(f(a))

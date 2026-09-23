@@ -123,7 +123,11 @@ function Invoke-StagedVerification {
   try {
     # `verify` is scalafmtCheckAll + solutions/testFull + exercises/Test/compile;
     # see build.sbt for why it is testFull and not test.
+    #
+    # munit colours its stack traces, and a colour code in front of `at` hides
+    # the frame from the filter — so the colours go first.
     sbt -batch verify 2>&1 |
+      ForEach-Object { "$_" -replace "`e\[[0-9;]*m", '' } |
       Where-Object { $_ -notmatch '^\s+at [A-Za-z_$][A-Za-z0-9_.$]*[.(]' -and $_ -notmatch 'sbt server disconnected' } |
       Out-Host
     return ($LASTEXITCODE -eq 0)

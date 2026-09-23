@@ -1,7 +1,5 @@
 package typeprog.ch02higherkinds
 
-import typeprog.core.Unsolved
-
 /** Exercise 02 — partially apply `Either` with a type lambda.
   *
   * `Either` has two holes and `Functor` wants one, so `Functor[Either]` is a
@@ -23,7 +21,11 @@ import typeprog.core.Unsolved
 object Exercise02:
 
   /** TODO: replace `Unsolved` with `Either`, `E` on the left. */
-  type ErrorOr[E] = [X] =>> Unsolved
+  type ErrorOr[E] = [X] =>> Either[E, X]
 
   /** TODO: implement. */
-  def eitherFunctor[E]: Functor[ErrorOr[E]] = ???
+  def eitherFunctor[E]: Functor[ErrorOr[E]] = new Functor[ErrorOr[E]]:
+    def map[A, B](fa: ErrorOr[E][A])(f: A => B): ErrorOr[E][B] =
+      fa match
+        case Right(a) => Right(f(a))
+        case Left(e) => Left(e)

@@ -27,10 +27,13 @@ package typeprog.ch02higherkinds
 object Exercise01:
 
   /** TODO: kind, and `map`. */
-  trait Mappable[F]
+  trait Mappable[F[_]]:
+    def map[A, B](fa: F[A])(f: A => B): F[B]
 
   /** TODO: kind, and `bimap`. */
-  trait BiMappable[F]
+  trait BiMappable[F[_, _]]:
+    def bimap[A, B, C, D](fab: F[A, B])(f: A => C, g: B => D): F[C, D]
 
   /** TODO: kind, and `forList`. */
-  trait Instances[TC]
+  trait Instances[TC[F[_]]]:
+    def forList: TC[List]
