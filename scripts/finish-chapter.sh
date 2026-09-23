@@ -132,8 +132,13 @@ verify_staged_tree() {
     cd "$VERIFY_DIR" || exit 1
     # `verify` is scalafmtCheckAll + solutions/testFull + exercises/Test/compile;
     # see build.sbt for why it is testFull and not test.
+    #
+    # munit colours its stack traces, and a colour code in front of `at` hides
+    # the frame from the filter — so the colours go first.
+    esc=$'\033'
     sbt -batch verify 2>&1 \
-      | sed -e '/[[:space:]]at [A-Za-z_$][A-Za-z0-9_.$]*[.(]/d' \
+      | sed -e "s/$esc\[[0-9;]*m//g" \
+            -e '/[[:space:]]at [A-Za-z_$][A-Za-z0-9_.$]*[.(]/d' \
             -e '/sbt server disconnected/d'
   )
 }
