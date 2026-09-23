@@ -20,7 +20,27 @@ lazy val commonSettings = Seq(
   // unused-import checker has no reason to look inside. Left on, every chapter
   // spec in the repository would report the one import that makes it work as
   // dead. The check stays on for main sources, where it means something.
-  Test / scalacOptions := scalacOptions.value.filterNot(_ == "-Wunused:imports")
+  Test / scalacOptions := scalacOptions.value.filterNot(_ == "-Wunused:imports"),
+  // The same strings hide the snippets' dependencies from incremental
+  // compilation. `assertTypeChecks("... Mappable[List] ...")` is decided when
+  // the spec compiles, but neither zinc nor sbt's compile cache sees that the
+  // spec uses `Mappable`, so editing an exercise left the spec — and the
+  // verdicts baked into it — untouched, and the tests kept judging the old
+  // code. The stamp below is a test source whose content is a hash of the
+  // sources a snippet can see; any edit to them changes it, and with
+  // `recompileAllFraction` at zero, one changed test source recompiles them
+  // all.
+  Test / sourceGenerators += Def.task {
+    val seen = (Compile / unmanagedSources).value ++
+      (LocalProject("core") / Compile / unmanagedSources).value ++
+      (LocalProject("core") / Test / unmanagedSources).value
+    val hash = Hash.toHex(Hash(seen.sortBy(_.getPath).map(f => IO.read(f)).mkString("\u0000")))
+    val stamp = (Test / sourceManaged).value / "SnippetScopeStamp.scala"
+    val content = s"// Hash of the sources snippets type-check against: $hash\n"
+    if (!stamp.exists || IO.read(stamp) != content) IO.write(stamp, content)
+    Seq(stamp)
+  }.taskValue,
+  Test / incOptions := Def.uncached((Test / incOptions).value.withRecompileAllFraction(0.0))
 )
 
 // Shared vocabulary: the `Unsolved` placeholder that keeps an unfinished
