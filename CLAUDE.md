@@ -33,6 +33,7 @@ them.
 | `sbt verify` | the gate: `scalafmtCheckAll`, `solutions/testFull`, `exercises/Test/compile` |
 | `sbt practice` | `exercises/testFull` — red by design |
 | `./scripts/finish-chapter.sh NN` | stage, verify the staged tree, commit, tag `chNN`, push |
+| `./scripts/solve-chapter.sh NN BRANCH` | learner side: commit chapter NN's solved exercises to BRANCH and push; never `main` |
 
 `testFull`, not `test`: under sbt 2 `test` is incremental and its greenest
 possible run is the one that ran nothing.
