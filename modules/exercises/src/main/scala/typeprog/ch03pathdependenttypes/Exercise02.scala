@@ -26,10 +26,12 @@ object Exercise02:
   final class Settings(values: Map[String, Any]):
 
     /** TODO: the type of `v`, and the body. */
-    def set(k: Key)(v: Any): Settings = ???
+    def set(k: Key)(v: k.Value): Settings =
+      Settings(values.updated(k.name, v))
 
     /** TODO: the result type, and the body. */
-    def get(k: Key): Option[Any] = ???
+    def get(k: Key): Option[k.Value] =
+      values.get(k.name).flatMap(v => k.parse(v.toString))
 
   object Settings:
     val empty: Settings = Settings(Map.empty)

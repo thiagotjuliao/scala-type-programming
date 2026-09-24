@@ -1,7 +1,5 @@
 package typeprog.ch03pathdependenttypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 01 — give each graph a node type of its own.
   *
   * As shipped, every `Graph` hands out the same `Node`, so nothing stops a node
@@ -25,9 +23,10 @@ import typeprog.core.Unsolved
 object Exercise01:
 
   /** TODO: every graph should have its own. */
-  final class Node(val label: String)
 
   final class Graph:
+    final class Node(val label: String)
+
     private var edges = Set.empty[(Node, Node)]
 
     def node(label: String): Node = Node(label)
@@ -35,4 +34,5 @@ object Exercise01:
     def connected(from: Node, to: Node): Boolean = edges(from -> to)
 
   /** TODO: the parameter types, and the body. */
-  def link(g: Graph)(a: Unsolved, b: Unsolved): Unit = ???
+  def link(g: Graph)(a: g.Node, b: g.Node): Unit =
+    g.connect(a, b)
