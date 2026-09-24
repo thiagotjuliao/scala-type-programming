@@ -1,7 +1,5 @@
 package typeprog.ch01foundations
 
-import typeprog.core.Unsolved
-
 /** Exercise 02 — refine a trait's type members.
   *
   * `Repo` leaves both of its types abstract, so `find` on a bare `Repo` takes
@@ -23,4 +21,4 @@ object Exercise02:
     def find(id: Id): Option[Entity]
 
   /** TODO: replace `Unsolved` with the refinement described above. */
-  type DogRepo = Unsolved
+  type DogRepo = Repo { type Id = Long; type Entity = Dog }

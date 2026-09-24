@@ -21,9 +21,9 @@ package typeprog.ch01foundations
   */
 object Exercise04:
 
-  final class Stack[A] private (private val items: List[A]): // TODO: variance
+  final class Stack[+A] private (private val items: List[A]):
     /** TODO: widen this so it still compiles once `A` is covariant. */
-    def push(a: A): Stack[A] = new Stack(a :: items)
+    def push[A2 >: A](a: A2): Stack[A2] = new Stack(a :: items)
 
     def peek: Option[A] = items.headOption
 
@@ -31,4 +31,4 @@ object Exercise04:
 
   object Stack:
     /** TODO: make this a `val` of type `Stack[Nothing]`. */
-    def empty[A]: Stack[A] = new Stack(Nil)
+    val empty: Stack[Nothing] = new Stack(Nil)

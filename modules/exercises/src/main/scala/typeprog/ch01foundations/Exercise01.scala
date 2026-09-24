@@ -18,14 +18,14 @@ package typeprog.ch01foundations
 object Exercise01:
 
   /** Produces an `A`. Never consumes one. */
-  trait Source[A]: // TODO: variance
+  trait Source[+A]:
     def emit(): A
 
   /** Consumes an `A`. Never produces one. */
-  trait Sink[A]: // TODO: variance
+  trait Sink[-A]:
     def accept(a: A): Unit
 
   /** Does both. Think before annotating this one — the spec expects a
     * particular answer, and it is not "whatever makes the first two work".
     */
-  trait Channel[A] extends Source[A], Sink[A] // TODO: variance
+  trait Channel[A] extends Source[A], Sink[A]
