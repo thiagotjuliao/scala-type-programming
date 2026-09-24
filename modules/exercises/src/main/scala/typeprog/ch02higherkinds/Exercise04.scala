@@ -1,7 +1,5 @@
 package typeprog.ch02higherkinds
 
-import typeprog.core.Unsolved
-
 /** Exercise 04 — compose two type constructors.
   *
   * A `List[Option[Int]]` has two layers, and mapping the `Int`s means mapping
@@ -21,7 +19,10 @@ import typeprog.core.Unsolved
 object Exercise04:
 
   /** TODO: replace `Unsolved` with `F` applied to `G` applied to the hole. */
-  type Compose[F[_], G[_]] = [X] =>> Unsolved
+  type Compose[F[_], G[_]] = [X] =>> F[G[X]]
 
   /** TODO: implement. */
-  def composed[F[_], G[_]](F: Functor[F], G: Functor[G]): Functor[Compose[F, G]] = ???
+  def composed[F[_], G[_]](F: Functor[F], G: Functor[G]): Functor[Compose[F, G]] =
+    new Functor[Compose[F, G]]:
+      def map[A, B](fga: Compose[F, G][A])(f: A => B): Compose[F, G][B] =
+        F.map(fga)(ga => G.map(ga)(f))
