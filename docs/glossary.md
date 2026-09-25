@@ -26,6 +26,9 @@ where the term is introduced, not everywhere it appears.
 | **phantom type** | a type parameter no value ever inhabits, carrying a fact | 05 |
 | **type class** | behaviour attached to a type from outside it, via a `given` | 06 |
 | **given / using** | the instance, and the place it is demanded | 06 |
+| **context bound** (`[A: Show]`) | shorthand for a `using` parameter of type `Show[A]` | 06 |
+| **implicit scope** | the companions of a type and of its parts, searched when the lexical scope finds no given | 06 |
+| **low-priority trait** | a parent trait of a companion, holding the givens that should lose a tie | 06 |
 | **match type** | a type-level `match`, reduced by the compiler | 07 |
 | **reduction** | the compiler evaluating a match type to a concrete type | 07 |
 | **`inline`** | a definition expanded at the call site before type-checking finishes | 08 |

@@ -70,17 +70,23 @@ mkdir -p "$EX_MAIN" "$EX_TEST" "$SO_MAIN" "$SO_TEST" docs/theory
 
 # --- rendering ----------------------------------------------------------------
 
+# In a sed replacement `&` is the whole match, `\` escapes, and `|` is our
+# delimiter — "Type classes & givens" would otherwise render as
+# "Type classes {{TITLE}} givens". Escaped with sed rather than ${v//&/…}
+# because bash 5.2's patsub_replacement gives `&` the same meaning there.
+sed_literal() { printf '%s' "$1" | sed -e 's/[\\&|]/\\&/g'; }
+
 render() { # <template> <destination> [exercise-number]
   local tmpl="$1" out="$2" ee="${3:-}"
   if [[ -e "$out" ]]; then
     echo "  kept:    $out"
     return 0
   fi
-  sed -e "s|{{NN}}|$NN|g" \
-      -e "s|{{TITLE}}|$TITLE|g" \
-      -e "s|{{SLUG}}|$SLUG|g" \
-      -e "s|{{PACKAGE}}|$PKG|g" \
-      -e "s|{{EE}}|$ee|g" \
+  sed -e "s|{{NN}}|$(sed_literal "$NN")|g" \
+      -e "s|{{TITLE}}|$(sed_literal "$TITLE")|g" \
+      -e "s|{{SLUG}}|$(sed_literal "$SLUG")|g" \
+      -e "s|{{PACKAGE}}|$(sed_literal "$PKG")|g" \
+      -e "s|{{EE}}|$(sed_literal "$ee")|g" \
       "$tmpl" > "$out"
   echo "  created: $out"
 }

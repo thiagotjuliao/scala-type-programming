@@ -15,7 +15,7 @@
 #>
 [CmdletBinding()]
 param(
-  [Parameter(Mandatory)][int]$Number,
+  [Parameter(Mandatory, Position = 0)][int]$Number,
   [Parameter(Position = 1)][string]$Title,
   [int]$Exercises = 3,
   [switch]$Add,

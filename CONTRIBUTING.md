@@ -37,6 +37,23 @@ before the exercise is solved — ascribing an expected type, for instance, lets
 inference pick the element type up front and an invariant container will
 swallow both pushes. If it passes red, it is not testing the exercise.
 
+Know what a snippet cannot see. `assertTypeChecks` and `assertTypeError` run
+the snippet through the type checker and stop there, so two kinds of compiler
+output never reach them:
+
+- **Errors reported after type-checking.** Comparing an opaque type with its
+  representation, `email == "a@b"`, is rejected by the multiversal equality
+  check (*"Values of types Email and String cannot be compared with == or
+  !="*) — and the same line passes `assertTypeChecks`, because that check runs
+  later. It is the case chapter 05 met; there may be others.
+- **Warnings.** Only errors are collected, so a non-exhaustive `match`, a
+  `Matchable` warning or an unchecked type test is invisible to both
+  assertions.
+
+Neither can be the claim of a spec. When the chapter needs one of them, it goes
+in the document's *Pitfalls* and in `Walkthrough.scala` as a quoted message —
+checked by compiling the code for real in a scratch file, never by a snippet.
+
 ## 3. The stub third
 
 It must compile, it must not work, and it must say what is wanted in prose —
