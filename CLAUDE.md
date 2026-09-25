@@ -4,6 +4,12 @@ A course on type-level programming in Scala 3, not a library. The deliverable of
 any change is a chapter someone can learn from; compiling is the floor, not the
 goal.
 
+How code and prose are written here is shared with every project built from
+project-templates, in `CONVENTIONS.md`. Where it and this file disagree, this
+file wins.
+
+@CONVENTIONS.md
+
 ## Before writing a chapter
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and follow its order — document, spec,
