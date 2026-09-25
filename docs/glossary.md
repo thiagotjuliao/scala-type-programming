@@ -45,5 +45,6 @@ where the term is introduced, not everywhere it appears.
 | **derivation** | building a type class instance from that description | 10 |
 | **`derives`** | a clause asking for `given TC[T] = TC.derived` in `T`'s companion | 10 |
 | **`NotGiven`** | evidence that no instance exists — negation in implicit search | 11 |
+| **`@implicitNotFound`** | the message a failed search for a type class prints, with its type arguments substituted | 11 |
 | **quote / splice** (`'{ }`, `${ }`) | moving between code as value and code as expression | 12 |
 | **`Expr` / `TypeRepr`** | a typed expression, and the compiler's view of a type | 12 |

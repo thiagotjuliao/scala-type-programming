@@ -16,7 +16,7 @@ out of sequence.
 | 08 | [`inline` & `scala.compiletime`](theory/ch08-inline-scala-compiletime.md) | `constValue`, `erasedValue`, `summonFrom`, `error` | `ch08` |
 | 09 | [Tuples as HLists](theory/ch09-tuples-as-hlists.md) | type-level lists, Peano arithmetic, `Tuple.Concat` | `ch09` |
 | 10 | [`Mirror` & generic derivation](theory/ch10-mirror-generic-derivation.md) | `derives`, `MirroredElemTypes`, generic type classes | `ch10` |
-| 11 | Evidence & type-safe state machines | `NotGiven`, phantom state, builders that cannot be misused | |
+| 11 | [Evidence & type-safe state machines](theory/ch11-evidence-type-safe-state-machines.md) | `NotGiven`, phantom state, builders that cannot be misused | `ch11` |
 | 12 | Macros: quotes & splices | `'{ }`, `${ }`, `Expr`, `TypeRepr`, when to stop | |
 
 Chapters `ch20` and up are reserved for applied case studies — a type-safe
