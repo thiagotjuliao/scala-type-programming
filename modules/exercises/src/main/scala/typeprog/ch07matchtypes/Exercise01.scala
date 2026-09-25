@@ -1,7 +1,5 @@
 package typeprog.ch07matchtypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 01 — take one layer off a type.
   *
   * Define `Unwrap[X]`, the type inside `X` when `X` is one of three
@@ -21,4 +19,8 @@ import typeprog.core.Unsolved
 object Exercise01:
 
   /** TODO: replace `Unsolved` with a match type. */
-  type Unwrap[X] = Unsolved
+  type Unwrap[X] = X match
+    case Option[a] => a
+    case Either[?, a] => a
+    case List[a] => a
+    case _ => X

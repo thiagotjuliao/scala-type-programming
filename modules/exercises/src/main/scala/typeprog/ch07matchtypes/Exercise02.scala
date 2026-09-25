@@ -1,7 +1,5 @@
 package typeprog.ch07matchtypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 02 — take every layer off a type.
   *
   * Define `Leaf[X]`: like exercise 01's `Unwrap`, with the same three
@@ -20,4 +18,8 @@ import typeprog.core.Unsolved
 object Exercise02:
 
   /** TODO: replace `Unsolved` with a recursive match type. */
-  type Leaf[X] = Unsolved
+  type Leaf[X] = X match
+    case Option[a] => Leaf[a]
+    case Either[?, a] => Leaf[a]
+    case List[a] => Leaf[a]
+    case _ => X

@@ -1,7 +1,5 @@
 package typeprog.ch07matchtypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 04 — units that cancel.
   *
   * Chapter 05 ended with quantities whose unit is a phantom type: a
@@ -52,8 +50,18 @@ object Exercise04:
     def per[V](other: Quantity[V]): Quantity[U / V] = q / other
 
     /** TODO: the body. */
-    def *[V](other: Quantity[V]): Quantity[Times[U, V]] = ???
+    def *[V](other: Quantity[V]): Quantity[Times[U, V]] =
+      q * other
 
   /** TODO: replace `Unsolved` with the unit of a product. */
-  type Times[U, V] = Unsolved
+  type Times[U, V] = (U, V) match
+    case (a / b, c) =>
+      c match
+        case b => a
+        case _ => U * V
+    case (a, b / c) =>
+      c match
+        case a => b
+        case _ => U * V
+    case _ => U * V
 end Exercise04

@@ -1,7 +1,5 @@
 package typeprog.ch07matchtypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 03 — a result type computed from the argument's.
   *
   * `first` returns the first element of what it is given, if there is one —
@@ -25,7 +23,13 @@ import typeprog.core.Unsolved
 object Exercise03:
 
   /** TODO: replace `Unsolved` with a match type. */
-  type First[X] = Unsolved
+  type First[X] = X match
+    case String => Option[Char]
+    case List[a] => Option[a]
+    case Option[a] => Option[a]
 
   /** TODO: the signature keeps anything else out; the body is a `match`. */
-  def first[X](x: X): First[X] = ???
+  def first[X <: String | List[?] | Option[?]](x: X): First[X] = x match
+    case s: String => s.headOption
+    case ls: List[?] => ls.headOption
+    case op: Option[?] => op
