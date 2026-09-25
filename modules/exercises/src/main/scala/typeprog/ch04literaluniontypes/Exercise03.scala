@@ -36,10 +36,24 @@ object Exercise03:
     raw.toIntOption.getOrElse(Malformed(key, raw))
 
   /** TODO: replace `Unsolved` with the port, or each way of not getting one. */
-  type PortResult = Unsolved
+  type PortResult = Int | Missing | Malformed | OutOfRange
 
   /** TODO: implement. */
-  def port(env: Map[String, String]): PortResult = ???
+  def port(env: Map[String, String]): PortResult =
+    lookup(env, "port") match
+      case raw: String =>
+        number("port", raw) match
+          case p: Int =>
+            if p < 1 | p > 65535 then OutOfRange("port", p) else p
+          case m: Malformed => m
+      case m: Missing => m
 
   /** TODO: implement. */
-  def explain(result: PortResult): String = ???
+  def explain(result: PortResult): String =
+    result match
+      case p: Int => s"port $p"
+      case _: Missing => s"port is not set"
+      case Malformed(_, r) => s"port is not a number: $r"
+      case OutOfRange(_, v) => s"port is out of range: $v"
+
+end Exercise03

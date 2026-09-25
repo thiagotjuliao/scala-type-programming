@@ -1,7 +1,5 @@
 package typeprog.ch04literaluniontypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 01 — make a type out of three values.
   *
   * The service answers with three status codes, and `describe` names them.
@@ -22,12 +20,16 @@ import typeprog.core.Unsolved
 object Exercise01:
 
   /** TODO: replace `Unsolved` with the three codes. */
-  type Status = Unsolved
+  type Status = 200 | 404 | 500
 
   /** TODO: each must keep its literal type. */
-  val Ok = 200
-  val NotFound = 404
-  val ServerError = 500
+  val Ok: 200 = 200
+  val NotFound: 404 = 404
+  val ServerError: 500 = 500
 
   /** TODO: implement. */
-  def describe(status: Status): String = ???
+  def describe(status: Status): String =
+    status match
+      case Ok => "OK"
+      case NotFound => "Not Found"
+      case ServerError => "Internal Server Error"

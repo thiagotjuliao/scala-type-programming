@@ -24,7 +24,10 @@ object Exercise04:
     def now(): Long
 
   /** TODO: the type of `env`, and the body. */
-  def stamp(env: Logger)(message: String): Unit = ???
+  def stamp(env: Logger & Clock)(message: String): Unit =
+    env.log(s"[${env.now()}] $message")
 
   /** TODO: the result type, and the body. */
-  def combine(logger: Logger, clock: Clock): Logger = ???
+  def combine(logger: Logger, clock: Clock): Logger & Clock = new Logger with Clock:
+    override def log(line: String): Unit = logger.log(line)
+    override def now(): Long = clock.now()
