@@ -31,6 +31,8 @@ where the term is introduced, not everywhere it appears.
 | **low-priority trait** | a parent trait of a companion, holding the givens that should lose a tie | 06 |
 | **match type** | a type-level `match`, reduced by the compiler | 07 |
 | **reduction** | the compiler evaluating a match type to a concrete type | 07 |
+| **disjoint** | two types no value can belong to both of; what lets a match type move past a case | 07 |
+| **stuck** match type | one left unreduced: a case neither matches nor can be proved disjoint | 07 |
 | **`inline`** | a definition expanded at the call site before type-checking finishes | 08 |
 | **`constValue`** | reading a literal type back as a value at compile time | 08 |
 | **`erasedValue`** | a value that exists only for its type; never evaluated | 08 |
