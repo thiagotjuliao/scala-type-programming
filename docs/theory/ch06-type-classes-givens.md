@@ -89,6 +89,22 @@ But no implicit values were found that match type Show[Widget].
 That recursion is a small logic program run by the type checker, and it is the
 engine of everything from here to chapter 11.
 
+The premises can also be written out, named, between the type parameters and
+the result:
+
+```scala
+given listShow: [A] => (s: Show[A]) => Show[List[A]] =
+  xs => xs.map(s.show).mkString("[", ", ", "]")
+```
+
+`[A: Show]` is short for this, with the name left out. The long form is the one
+to reach for when a premise is not about a single type parameter — a
+`Conversion[A, B]` relates two, and a context bound attaches to one — or when
+there are several premises the body has to tell apart. Before Scala 3.6 the
+same rule was written `given listShow[A](using s: Show[A]): Show[List[A]]`;
+that form still compiles, but it is the old syntax and is being phased out.
+The change is [SIP-64](https://docs.scala-lang.org/sips/sips/typeclasses-syntax.html).
+
 ### Where the compiler looks
 
 Two places, in order.
