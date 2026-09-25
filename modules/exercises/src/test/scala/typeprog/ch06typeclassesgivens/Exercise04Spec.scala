@@ -39,10 +39,17 @@ class Exercise04Spec extends TypeLevelSuite:
     assertTypeError("""add((1, "a"), (2, 3))""")
   }
 
+  // Compared as `Any`: the exact result types are the claims of the tests
+  // above. Compared at their own types, an `add` whose instances do not yet
+  // say what `Out` is — the trap this exercise is about — finds no munit
+  // `Compare` and takes the whole module down instead of failing a test.
+  // Against the stub's `???` they fail, which is a red test. An instance that
+  // is missing altogether still stops compilation — calling `add` at all needs
+  // one — but then the error names the instance.
   test("the arithmetic is the arithmetic of the values") {
-    assertEquals(add(1, 2), 3)
-    assertEquals(add(1, 2.5), 3.5)
-    assertEquals(add("a", "b"), "ab")
-    assertEquals(add((1, "a"), (2.5, "b")), (3.5, "ab"))
+    assertEquals[Any, Any](add(1, 2), 3)
+    assertEquals[Any, Any](add(1, 2.5), 3.5)
+    assertEquals[Any, Any](add("a", "b"), "ab")
+    assertEquals[Any, Any](add((1, "a"), (2.5, "b")), (3.5, "ab"))
   }
 end Exercise04Spec
