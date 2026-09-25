@@ -17,11 +17,12 @@ package typeprog.ch05opaquetypes
 object Exercise02:
 
   /** TODO: every port should be usable as an `Int`. */
-  opaque type Port = Int
+  opaque type Port <: Int = Int
 
   object Port:
     val Http: Port = 80
     val Https: Port = 443
 
     /** TODO: implement. */
-    def from(n: Int): Option[Port] = ???
+    def from(n: Int): Option[Port] =
+      Option.when(n >= 1 && n <= 65535)(n)

@@ -31,13 +31,13 @@ object Exercise03:
   final class Connection[S <: State] private (val host: String, val sent: List[String]):
 
     /** TODO: only when closed. */
-    def open: Connection[Open] = Connection(host, sent)
+    def open(using S =:= Closed): Connection[Open] = Connection(host, sent)
 
     /** TODO: only when open. */
-    def send(message: String): Connection[S] = Connection(host, sent :+ message)
+    def send(using S =:= Open)(message: String): Connection[S] = Connection(host, sent :+ message)
 
     /** TODO: only when open. */
-    def close: Connection[Closed] = Connection(host, sent)
+    def close(using S =:= Open): Connection[Closed] = Connection(host, sent)
 
   object Connection:
     def to(host: String): Connection[Closed] = Connection(host, Nil)
