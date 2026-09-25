@@ -43,6 +43,7 @@ where the term is introduced, not everywhere it appears.
 | **`compiletime.ops`** | arithmetic and comparisons on literal types, evaluated when the arguments are literals | 09 |
 | **`Mirror`** | the compiler-synthesised description of a case class or enum | 10 |
 | **derivation** | building a type class instance from that description | 10 |
+| **`derives`** | a clause asking for `given TC[T] = TC.derived` in `T`'s companion | 10 |
 | **`NotGiven`** | evidence that no instance exists — negation in implicit search | 11 |
 | **quote / splice** (`'{ }`, `${ }`) | moving between code as value and code as expression | 12 |
 | **`Expr` / `TypeRepr`** | a typed expression, and the compiler's view of a type | 12 |
