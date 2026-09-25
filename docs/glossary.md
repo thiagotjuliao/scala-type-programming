@@ -46,5 +46,6 @@ where the term is introduced, not everywhere it appears.
 | **`derives`** | a clause asking for `given TC[T] = TC.derived` in `T`'s companion | 10 |
 | **`NotGiven`** | evidence that no instance exists — negation in implicit search | 11 |
 | **`@implicitNotFound`** | the message a failed search for a type class prints, with its type arguments substituted | 11 |
+| **macro** | an `inline` method whose body is a splice: code run by the compiler, on the program being compiled | 12 |
 | **quote / splice** (`'{ }`, `${ }`) | moving between code as value and code as expression | 12 |
 | **`Expr` / `TypeRepr`** | a typed expression, and the compiler's view of a type | 12 |
