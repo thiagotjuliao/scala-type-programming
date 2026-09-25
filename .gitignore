@@ -1,3 +1,29 @@
+# --- IDE ---
+.idea/
+*.iml
+
+# `.vscode/` is mostly per-user state, but `settings.json` and
+# `extensions.json` are an environment contract — the editor configuration the
+# repository's conventions assume. They travel with the repository; everything
+# else in the directory (launch.json with absolute paths, in particular) does
+# not.
+#
+# The pattern must be `.vscode/*`, not `.vscode/`: git does not descend into an
+# excluded directory, so a trailing-slash exclusion makes the negations below
+# unreachable.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Secrets ---
+# `.env.example` documents the variables; `.env` holds the values.
+.env
+!.env.example
+
+# --- OS noise ---
+.DS_Store
+Thumbs.db
+
 # --- sbt / Scala build output ---
 target/
 project/target/
@@ -8,28 +34,10 @@ project/project/
 metals.sbt
 *.class
 
-# --- IDE ---
-.idea/
-*.iml
-
-# `.vscode/` is mostly per-user state, but `settings.json` and
-# `extensions.json` are an environment contract — the editor configuration the
-# repository's conventions assume. They travel with the repository; everything
-# else in the directory does not.
-#
-# The pattern must be `.vscode/*`, not `.vscode/`: git does not descend into an
-# excluded directory, so a trailing-slash exclusion makes the negations below
-# unreachable.
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
-
 # --- Metals worksheets ---
-#
-# Exempt under modules/playground/: scratch worksheets are the point of that
-# module, and the ones worth keeping are kept.
+# Scratch by default. A project that keeps some adds a negation below, e.g.
+# `!modules/playground/**/*.worksheet.sc`.
 *.worksheet.sc
-!modules/playground/**/*.worksheet.sc
 
 # --- JVM crash / profiling artifacts ---
 hs_err_pid*.log
@@ -37,6 +45,18 @@ replay_pid*.log
 *.hprof
 *.jfr
 
-# --- OS noise ---
-.DS_Store
-Thumbs.db
+# --- Misplaced tool output ---
+
+# Coursier builds its Windows cache path from %LOCALAPPDATA%. A process that
+# cannot see that variable resolves it to the literal string "null" and writes
+# the cache to ./null in the working directory — tens of megabytes of jars,
+# untracked, one careless `git add .` away from the history.
+null/
+
+# ==============================================================================
+# This project — additions to the template (project-templates/scala-sbt)
+# ==============================================================================
+
+# Scratch worksheets are the point of modules/playground/, and the ones worth
+# keeping are kept.
+!modules/playground/**/*.worksheet.sc
