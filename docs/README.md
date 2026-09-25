@@ -14,7 +14,7 @@ out of sequence.
 | 06 | [Type classes, givens & implicit search](theory/ch06-type-classes-givens.md) | `given`/`using`, resolution order, priority, ambiguity | `ch06` |
 | 07 | [Match types](theory/ch07-match-types.md) | computation over types, reduction, `Tuple.Head` | `ch07` |
 | 08 | [`inline` & `scala.compiletime`](theory/ch08-inline-scala-compiletime.md) | `constValue`, `erasedValue`, `summonFrom`, `error` | `ch08` |
-| 09 | Tuples as HLists | type-level lists, Peano arithmetic, `Tuple.Concat` | |
+| 09 | [Tuples as HLists](theory/ch09-tuples-as-hlists.md) | type-level lists, Peano arithmetic, `Tuple.Concat` | `ch09` |
 | 10 | `Mirror` & generic derivation | `derives`, `MirroredElemTypes`, generic type classes | |
 | 11 | Evidence & type-safe state machines | `NotGiven`, phantom state, builders that cannot be misused | |
 | 12 | Macros: quotes & splices | `'{ }`, `${ }`, `Expr`, `TypeRepr`, when to stop | |
