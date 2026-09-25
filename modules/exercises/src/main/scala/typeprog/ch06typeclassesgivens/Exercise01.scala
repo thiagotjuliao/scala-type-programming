@@ -30,6 +30,12 @@ object Exercise01:
     given Show[String] = s => s"\"$s\""
 
     // TODO: instances for List[A] and Option[A], for an A that has a Show.
+    given [A: Show] => Show[List[A]] =
+      _.map(summon[Show[A]].show)
+        .mkString("[", ", ", "]")
+
+    given [A: Show] => Show[Option[A]] =
+      _.map(summon[Show[A]].show).toString
 
   /** TODO: only for an `A` that has a `Show`; render it with that instance. */
-  def describe[A](a: A): String = ???
+  def describe[A](a: A)(using ev: Show[A]): String = ev.show(a)

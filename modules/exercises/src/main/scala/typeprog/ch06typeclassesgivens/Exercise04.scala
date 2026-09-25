@@ -42,6 +42,18 @@ object Exercise04:
       def apply(a: A, b: B): O = f(a, b)
 
     // TODO: the instances.
+    given Aux[Int, Int, Int] = Add.instance(_ + _)
+    given Aux[Int, Double, Double] = Add.instance(_.toDouble + _)
+    given Aux[Double, Int, Double] = Add.instance(_ + _.toDouble)
+    given Aux[Double, Double, Double] = Add.instance(_ + _)
+    given Aux[String, String, String] = Add.instance(_ + _)
+
+    given [A, B, O1, C, D, O2] => (
+        first: Aux[A, C, O1],
+        second: Aux[B, D, O2]
+    ) => Aux[(A, B), (C, D), (O1, O2)] = Add.instance:
+      case ((a, b), (c, d)) => (first(a, c), second(b, d))
 
   /** TODO: the signature, and the body. */
-  def add[A, B](a: A, b: B): Any = ???
+  def add[A, B](a: A, b: B)(using ev: Add[A, B]): ev.Out = ev(a, b)
+end Exercise04

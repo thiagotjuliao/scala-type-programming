@@ -30,9 +30,9 @@ object Exercise02:
   object Version:
 
     /** TODO: by number, not by spelling. */
-    given Ordering[Version] = Ordering.by(_.toString)
+    given Ordering[Version] = Ordering.by(v => (v.major, v.minor, v.patch))
 
     object NewestFirst:
 
       /** TODO: implement. */
-      given Ordering[Version] = ???
+      given Ordering[Version] = Ordering.by(v => (-v.major, -v.minor, -v.patch))

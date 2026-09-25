@@ -38,9 +38,9 @@ object Exercise03:
 
   /** TODO: the rules are right; which one wins is not. */
   trait Fallbacks:
-    given numeric: [A: Numeric] => Json[A] = _.toString
+    given quoted: [A: Show] => Json[A] = a => "\"" + summon[Show[A]].show(a) + "\""
 
   object Json extends Fallbacks:
-    given quoted: [A: Show] => Json[A] = a => "\"" + summon[Show[A]].show(a) + "\""
+    given numeric: [A: Numeric] => Json[A] = _.toString
 
   def encode[A: Json](a: A): String = summon[Json[A]].encode(a)
