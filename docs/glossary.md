@@ -36,10 +36,16 @@ where the term is introduced, not everywhere it appears.
 | **`inline`** | a definition expanded at the call site before type-checking finishes | 08 |
 | **`constValue`** | reading a literal type back as a value at compile time | 08 |
 | **`erasedValue`** | a value that exists only for its type; never evaluated | 08 |
+| **`transparent inline`** | an inline method whose call has the type of its expansion, not of its declaration | 08 |
+| **`summonFrom`** | a match whose cases are instance searches, tried in order at the expansion | 08 |
 | **Peano numbers** | naturals encoded as `Zero` / `Succ[N]`, arithmetic by recursion | 09 |
 | **HList** | a heterogeneous list; in Scala 3 an ordinary `Tuple` | 09 |
+| **`compiletime.ops`** | arithmetic and comparisons on literal types, evaluated when the arguments are literals | 09 |
 | **`Mirror`** | the compiler-synthesised description of a case class or enum | 10 |
 | **derivation** | building a type class instance from that description | 10 |
+| **`derives`** | a clause asking for `given TC[T] = TC.derived` in `T`'s companion | 10 |
 | **`NotGiven`** | evidence that no instance exists — negation in implicit search | 11 |
+| **`@implicitNotFound`** | the message a failed search for a type class prints, with its type arguments substituted | 11 |
+| **macro** | an `inline` method whose body is a splice: code run by the compiler, on the program being compiled | 12 |
 | **quote / splice** (`'{ }`, `${ }`) | moving between code as value and code as expression | 12 |
 | **`Expr` / `TypeRepr`** | a typed expression, and the compiler's view of a type | 12 |
