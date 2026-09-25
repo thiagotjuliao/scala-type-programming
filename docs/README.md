@@ -12,7 +12,7 @@ out of sequence.
 | 04 | [Literal, singleton, union & intersection types](theory/ch04-literal-union-types.md) | `42` as a type, `A & B`, `A \| B`, `Matchable` | `ch04` |
 | 05 | [Opaque types & phantom newtypes](theory/ch05-opaque-types.md) | zero-cost wrappers, tagging, types with no values | `ch05` |
 | 06 | [Type classes, givens & implicit search](theory/ch06-type-classes-givens.md) | `given`/`using`, resolution order, priority, ambiguity | `ch06` |
-| 07 | Match types | computation over types, reduction, `Tuple.Head` | |
+| 07 | [Match types](theory/ch07-match-types.md) | computation over types, reduction, `Tuple.Head` | `ch07` |
 | 08 | `inline` & `scala.compiletime` | `constValue`, `erasedValue`, `summonFrom`, `error` | |
 | 09 | Tuples as HLists | type-level lists, Peano arithmetic, `Tuple.Concat` | |
 | 10 | `Mirror` & generic derivation | `derives`, `MirroredElemTypes`, generic type classes | |
