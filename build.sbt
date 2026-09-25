@@ -1,18 +1,13 @@
 ThisBuild / scalaVersion := "3.9.0"
 ThisBuild / organization := "dev.thiagojuliao"
-ThisBuild / version      := "0.1.0"
+ThisBuild / version := "0.1.0"
 
 lazy val commonSettings = Seq(
-  scalacOptions ++= Seq(
-    "-deprecation",
-    "-feature",
-    "-unchecked",
-    "-Wunused:imports",
+  scalacOptions ++= CompilerFlags.base :+
     // Type-level recursion (Peano arithmetic, tuple folds, derivation) blows
     // past the default budget of 32 long before it blows past anything that
     // deserves to be called a limit.
-    "-Xmax-inlines:128"
-  ),
+    CompilerFlags.maxInlines(128),
   libraryDependencies += "org.scalameta" %% "munit" % "1.3.6" % Test,
   testFrameworks += new TestFramework("munit.Framework"),
   // A snippet handed to `assertTypeChecks` is type-checked in the scope of its
@@ -20,7 +15,7 @@ lazy val commonSettings = Seq(
   // unused-import checker has no reason to look inside. Left on, every chapter
   // spec in the repository would report the one import that makes it work as
   // dead. The check stays on for main sources, where it means something.
-  Test / scalacOptions := scalacOptions.value.filterNot(_ == "-Wunused:imports"),
+  Test / scalacOptions := scalacOptions.value.filterNot(_ == CompilerFlags.unusedImports),
   // The same strings hide the snippets' dependencies from incremental
   // compilation. `assertTypeChecks("... Mappable[List] ...")` is decided when
   // the spec compiles, but neither zinc nor sbt's compile cache sees that the
@@ -79,7 +74,7 @@ lazy val root = project
   .in(file("."))
   .aggregate(core, exercises, solutions, playground)
   .settings(
-    name           := "scala-type-programming",
+    name := "scala-type-programming",
     publish / skip := true
   )
 
