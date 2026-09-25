@@ -36,6 +36,8 @@ where the term is introduced, not everywhere it appears.
 | **`inline`** | a definition expanded at the call site before type-checking finishes | 08 |
 | **`constValue`** | reading a literal type back as a value at compile time | 08 |
 | **`erasedValue`** | a value that exists only for its type; never evaluated | 08 |
+| **`transparent inline`** | an inline method whose call has the type of its expansion, not of its declaration | 08 |
+| **`summonFrom`** | a match whose cases are instance searches, tried in order at the expansion | 08 |
 | **Peano numbers** | naturals encoded as `Zero` / `Succ[N]`, arithmetic by recursion | 09 |
 | **HList** | a heterogeneous list; in Scala 3 an ordinary `Tuple` | 09 |
 | **`Mirror`** | the compiler-synthesised description of a case class or enum | 10 |
