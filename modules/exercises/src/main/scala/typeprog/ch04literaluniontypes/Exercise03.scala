@@ -1,7 +1,5 @@
 package typeprog.ch04literaluniontypes
 
-import typeprog.core.Unsolved
-
 /** Exercise 03 — a result that lists every way it can fail.
   *
   * Reading a port from the environment can go wrong three ways, and each has
