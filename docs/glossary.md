@@ -40,6 +40,7 @@ where the term is introduced, not everywhere it appears.
 | **`summonFrom`** | a match whose cases are instance searches, tried in order at the expansion | 08 |
 | **Peano numbers** | naturals encoded as `Zero` / `Succ[N]`, arithmetic by recursion | 09 |
 | **HList** | a heterogeneous list; in Scala 3 an ordinary `Tuple` | 09 |
+| **`compiletime.ops`** | arithmetic and comparisons on literal types, evaluated when the arguments are literals | 09 |
 | **`Mirror`** | the compiler-synthesised description of a case class or enum | 10 |
 | **derivation** | building a type class instance from that description | 10 |
 | **`NotGiven`** | evidence that no instance exists — negation in implicit search | 11 |
