@@ -1,6 +1,5 @@
 package typeprog.ch09tuplesashlists
 
-import scala.util.NotGiven
 import scala.compiletime.ops.int.*
 
 /** Exercise 04 — a vector with its length in its type.
@@ -24,7 +23,6 @@ import scala.compiletime.ops.int.*
   * asked for as evidence.
   */
 object Exercise04:
-  type =!=[A, B] = NotGiven[A =:= B]
 
   final class Vec[N <: Int, +A] private (val items: Vector[A]):
 
@@ -37,11 +35,11 @@ object Exercise04:
       Vec(items ++ other.items)
 
     /** TODO: only when not empty. */
-    def head(using N =!= 0): A =
+    def head(using N > 0 =:= true): A =
       items.head
 
     /** TODO: only when not empty, and one shorter. */
-    def tail(using N =!= 0): Vec[N - 1, A] =
+    def tail(using N > 0 =:= true): Vec[N - 1, A] =
       Vec(items.tail)
 
   object Vec:

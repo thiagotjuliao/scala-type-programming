@@ -1,7 +1,5 @@
 package typeprog.ch09tuplesashlists
 
-import typeprog.core.Unsolved
-
 /** Exercise 01 — arithmetic on Peano numbers.
   *
   * A natural number as a type is `Zero`, or the successor `Succ[N]` of a
