@@ -15,7 +15,12 @@ lazy val commonSettings = Seq(
   // unused-import checker has no reason to look inside. Left on, every chapter
   // spec in the repository would report the one import that makes it work as
   // dead. The check stays on for main sources, where it means something.
-  Test / scalacOptions := scalacOptions.value.filterNot(_ == CompilerFlags.unusedImports),
+  //
+  // `~=`, not `:= scalacOptions.value...`: the unscoped `scalacOptions` in the
+  // body is the project-level value, which lacks the `-Xsemanticdb` options sbt
+  // adds per configuration — so the test sources compiled without SemanticDB
+  // and Metals reported the four test targets as misconfigured.
+  Test / scalacOptions ~= (_.filterNot(_ == CompilerFlags.unusedImports)),
   // The same strings hide the snippets' dependencies from incremental
   // compilation. `assertTypeChecks("... Mappable[List] ...")` is decided when
   // the spec compiles, but neither zinc nor sbt's compile cache sees that the
