@@ -45,7 +45,13 @@ object Exercise03:
     given Aux[String, String, String] = instance(_ + _)
 
     // TODO: an instance for the empty tuple, and one for a head and a tail.
+    given Aux[EmptyTuple, EmptyTuple, EmptyTuple] = instance((_, _) => EmptyTuple)
+
+    given [H1, T1 <: Tuple, O1, H2, T2 <: Tuple, O2 <: Tuple]
+      => (head: Aux[H1, H2, O1], tail: Aux[T1, T2, O2]) => Aux[H1 *: T1, H2 *: T2, O1 *: O2] =
+      instance:
+        case (h1 *: t1, h2 *: t2) => head(h1, h2) *: tail(t1, t2)
 
   /** TODO: chapter 06's signature, and the body. */
-  def add[A, B](a: A, b: B): Any = ???
+  def add[A, B](a: A, b: B)(using ev: Add[A, B]): ev.Out = ev(a, b)
 end Exercise03

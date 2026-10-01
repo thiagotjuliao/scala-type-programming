@@ -1,6 +1,6 @@
 package typeprog.ch09tuplesashlists
 
-import typeprog.core.Unsolved
+import scala.compiletime.ops.int.*
 
 /** Exercise 02 — the position of a type in a tuple.
   *
@@ -23,4 +23,10 @@ import typeprog.core.Unsolved
 object Exercise02:
 
   /** TODO: replace `Unsolved` with a match type. */
-  type IndexOf[T <: Tuple, X] = Unsolved
+  type IndexOf[T <: Tuple, X] = T match
+    case EmptyTuple => -1
+    case X *: _ => 0
+    case _ *: t =>
+      IndexOf[t, X] match
+        case -1 => -1
+        case _ => 1 + IndexOf[t, X]

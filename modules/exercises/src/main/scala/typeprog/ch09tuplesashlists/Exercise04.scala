@@ -1,5 +1,8 @@
 package typeprog.ch09tuplesashlists
 
+import scala.util.NotGiven
+import scala.compiletime.ops.int.*
+
 /** Exercise 04 — a vector with its length in its type.
   *
   * `Vec[N, A]` holds `N` elements of type `A`, and `N` is a literal type:
@@ -21,20 +24,26 @@ package typeprog.ch09tuplesashlists
   * asked for as evidence.
   */
 object Exercise04:
+  type =!=[A, B] = NotGiven[A =:= B]
 
   final class Vec[N <: Int, +A] private (val items: Vector[A]):
 
     /** TODO: one longer. */
-    def ::[B >: A](b: B): Vec[N, B] = ???
+    def ::[B >: A](b: B): Vec[N + 1, B] =
+      Vec(b +: items)
 
     /** TODO: as long as both. */
-    def ++[M <: Int, B >: A](other: Vec[M, B]): Vec[N, B] = ???
+    def ++[M <: Int, B >: A](other: Vec[M, B]): Vec[N + M, B] =
+      Vec(items ++ other.items)
 
     /** TODO: only when not empty. */
-    def head: A = ???
+    def head(using N =!= 0): A =
+      items.head
 
     /** TODO: only when not empty, and one shorter. */
-    def tail: Vec[N, A] = ???
+    def tail(using N =!= 0): Vec[N - 1, A] =
+      Vec(items.tail)
 
   object Vec:
     def empty[A]: Vec[0, A] = Vec(Vector.empty)
+end Exercise04
