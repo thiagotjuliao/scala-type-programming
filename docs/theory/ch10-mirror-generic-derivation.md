@@ -184,6 +184,21 @@ cannot reduce summonFrom with
 A last `case _ => error("…")` in the `summonFrom` replaces it with one that
 names the problem.
 
+**A `summonFrom` on a pattern's type variable.** Written straight inside the
+`case _: (h *: t) =>` of an `inline match`, `summonFrom { case v: ValueOf[h] =>
+… }` finds nothing, even when `h` is a case object's singleton type. The search
+sees the pattern's variable, not the type it matched:
+
+```text
+cannot reduce summonFrom with
+ patterns :  case given v @ _:ValueOf[h @ _]
+```
+
+With a `case _ => error("…")` it fails with that message instead, for every
+type. Move the `summonFrom` into an `inline def` of its own, with a type
+parameter, and call it as `one[h]`: the parameter receives the matched type,
+and the search finds the instance. (Scala 3.9.0, checked 2026-10-01.)
+
 **Only looking for existing instances.** `summonAll[Tuple.Map[m.MirroredElemTypes,
 Eq]]` finds the instances that exist, and the cases of an `enum` usually have
 none — they are case classes nobody derived anything for:
