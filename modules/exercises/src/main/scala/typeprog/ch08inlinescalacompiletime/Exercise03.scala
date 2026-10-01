@@ -27,4 +27,10 @@ package typeprog.ch08inlinescalacompiletime
 object Exercise03:
 
   /** TODO: the sum, with the type of the sum. */
-  inline def add[A, B](a: A, b: B): Any = ???
+  transparent inline def add[A, B](a: A, b: B): Any =
+    inline (a, b) match
+      case (x: Int, y: Int) => x + y
+      case (x: String, y: String) => x + y
+      case (x: Double, y: Double) => x + y
+      case (x: Int, y: Double) => x.toDouble + y
+      case (x: Double, y: Int) => x + y.toDouble

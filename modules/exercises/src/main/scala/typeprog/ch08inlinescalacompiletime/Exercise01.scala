@@ -1,5 +1,8 @@
 package typeprog.ch08inlinescalacompiletime
 
+import scala.compiletime.*
+import typeprog.ch08inlinescalacompiletime as extension
+
 /** Exercise 01 — a port checked while compiling.
   *
   * Chapter 05's ports were validated at runtime, and handed back as an
@@ -25,6 +28,9 @@ object Exercise01:
 
   object Port:
     /** TODO: the port numbered `N`, or a compile error. */
-    inline def apply[N <: Int]: Port = ???
+    inline def apply[N <: Int]: Port =
+      val portNumber = constValue[N]
+      inline if portNumber >= 1 && portNumber <= 65535 then portNumber
+      else error("a port is between 1 and 65535")
 
   extension (p: Port) def number: Int = p

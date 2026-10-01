@@ -1,5 +1,7 @@
 package typeprog.ch08inlinescalacompiletime
 
+import scala.compiletime.*
+
 /** Exercise 02 — a default value for every type that has one.
   *
   * `default[T]` is the value a `T` starts from:
@@ -21,4 +23,13 @@ package typeprog.ch08inlinescalacompiletime
 object Exercise02:
 
   /** TODO: the default for `T`, or a compile error. */
-  inline def default[T]: T = ???
+  inline def default[T]: T = inline erasedValue[T] match
+    case _: Int => 0.asInstanceOf[T]
+    case _: Long => 0L.asInstanceOf[T]
+    case _: Double => 0.0.asInstanceOf[T]
+    case _: Boolean => false.asInstanceOf[T]
+    case _: String => "".asInstanceOf[T]
+    case _: Option[?] => None.asInstanceOf[T]
+    case _: List[?] => Nil.asInstanceOf[T]
+    case _: (a, b) => (default[a], default[b]).asInstanceOf[T]
+    case _ => error("no default value")
