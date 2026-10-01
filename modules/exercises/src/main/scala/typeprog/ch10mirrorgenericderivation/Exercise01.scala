@@ -1,5 +1,8 @@
 package typeprog.ch10mirrorgenericderivation
 
+import scala.compiletime.*
+import scala.deriving.*
+
 /** Exercise 01 — a type's name and its field names.
   *
   *   - `typeName[T]` is the name of `T` as written in its definition:
@@ -20,7 +23,9 @@ package typeprog.ch10mirrorgenericderivation
 object Exercise01:
 
   /** TODO: the name of `T`. */
-  inline def typeName[T]: String = ???
+  inline def typeName[T](using m: Mirror.Of[T]): String =
+    constValue[m.MirroredLabel]
 
   /** TODO: the names of `T`'s fields, in order. */
-  inline def fieldNames[T]: List[String] = ???
+  inline def fieldNames[T](using m: Mirror.ProductOf[T]): List[String] =
+    constValueTuple[m.MirroredElemLabels].toList.map(_.toString)

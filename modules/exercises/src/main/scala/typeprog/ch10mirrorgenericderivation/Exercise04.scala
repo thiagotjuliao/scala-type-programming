@@ -1,5 +1,7 @@
 package typeprog.ch10mirrorgenericderivation
 
+import scala.deriving.Mirror
+
 /** Exercise 04 — a case class from the tuple of its fields, and back.
   *
   *   - `build[Person](("Ann", 3))` is `Person("Ann", 3)`, and the tuple must be
@@ -18,7 +20,9 @@ package typeprog.ch10mirrorgenericderivation
 object Exercise04:
 
   /** TODO: exactly `T`'s fields, and the `T` they make. */
-  def build[T](fields: Any): T = ???
+  def build[T](using m: Mirror.ProductOf[T])(fields: m.MirroredElemTypes): T =
+    m.fromProduct(fields)
 
   /** TODO: the tuple of `t`'s fields, typed. */
-  def fields[T](t: T): Any = ???
+  def fields[T](t: T)(using m: Mirror.ProductOf[T]): m.MirroredElemTypes =
+    Tuple.fromProduct(t.asInstanceOf[Product]).asInstanceOf[m.MirroredElemTypes]

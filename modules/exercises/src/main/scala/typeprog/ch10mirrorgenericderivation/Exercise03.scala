@@ -1,6 +1,7 @@
 package typeprog.ch10mirrorgenericderivation
 
 import scala.deriving.Mirror
+import scala.compiletime.*
 
 /** Exercise 03 — every value of an enum.
   *
@@ -26,4 +27,14 @@ object Exercise03:
 
   object Values:
     /** TODO: every value of `A`, or a compile error. */
-    inline def derived[A](using m: Mirror.SumOf[A]): Values[A] = ???
+    inline def derived[A](using m: Mirror.SumOf[A]): Values[A] = new Values[A]:
+      val all: List[A] = values[m.MirroredElemTypes, A]
+
+    inline def values[T <: Tuple, A]: List[A] = inline erasedValue[T] match
+      case _: EmptyTuple => Nil
+      case _: (h *: t) => valueFor[h].asInstanceOf[A] :: values[t, A]
+
+    inline def valueFor[H]: H = summonFrom {
+      case v: ValueOf[H] => v.value
+      case _ => error("every case must be a singleton, with no parameters")
+    }
