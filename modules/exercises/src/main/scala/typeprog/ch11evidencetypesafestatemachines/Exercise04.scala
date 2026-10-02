@@ -1,6 +1,6 @@
 package typeprog.ch11evidencetypesafestatemachines
 
-import typeprog.core.Unsolved
+import scala.annotation.implicitNotFound
 
 /** Exercise 04 — a door that only does what doors do.
   *
@@ -37,15 +37,26 @@ object Exercise04:
   sealed trait Unlock
 
   /** TODO: replace `Unsolved` with the transition table. */
-  type Next[S, E] = Unsolved
+  type Next[S, E] = (S, E) match
+    case (Opened, Close) => Closed
+    case (Closed, Open) => Opened
+    case (Closed, Lock) => Locked
+    case (Locked, Unlock) => Closed
 
   /** TODO: an instance for exactly the allowed pairs, and a message for the rest. */
+  @implicitNotFound("cannot ${E} a door that is ${S}")
   sealed trait Allowed[S, E]
+
+  given Allowed[Opened, Close] = new Allowed[Opened, Close] {}
+  given Allowed[Closed, Open] = new Allowed[Closed, Open] {}
+  given Allowed[Closed, Lock] = new Allowed[Closed, Lock] {}
+  given Allowed[Locked, Unlock] = new Allowed[Locked, Unlock] {}
 
   final class Door[S] private ():
 
     /** TODO: only for an allowed event, into the state the table gives. */
-    def on[E]: Door[Unsolved] = ???
+    def on[E](using a: Allowed[S, E]): Door[Next[S, E]] = Door()
 
   object Door:
     def opened: Door[Opened] = new Door
+end Exercise04

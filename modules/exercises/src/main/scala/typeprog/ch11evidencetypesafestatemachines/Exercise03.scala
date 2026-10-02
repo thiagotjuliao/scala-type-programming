@@ -1,5 +1,7 @@
 package typeprog.ch11evidencetypesafestatemachines
 
+import scala.annotation.implicitNotFound
+
 /** Exercise 03 — a builder that cannot be misused.
   *
   * `RequestBuilder` collects a URL and a method, and builds a `Request`. Make
@@ -28,13 +30,21 @@ object Exercise03:
   ):
 
     /** TODO: once only. */
-    def url(u: String): RequestBuilder[true, HasMethod] = ???
+    def url(u: String)(using HasUrl =:= false): RequestBuilder[true, HasMethod] =
+      new RequestBuilder[true, HasMethod](u, method)
 
     /** TODO: once only. */
-    def method(m: String): RequestBuilder[HasUrl, true] = ???
+    def method(m: String)(using HasMethod =:= false): RequestBuilder[HasUrl, true] =
+      new RequestBuilder[HasUrl, true](url, m)
 
     /** TODO: only with both set, saying which one is missing. */
-    def build: Request = ???
+
+    def build(using
+        HasUrl =:= true @implicitNotFound("no URL"),
+        HasMethod =:= true @implicitNotFound("no method")
+    ): Request =
+      Request(method, url)
 
   object RequestBuilder:
     def apply(): RequestBuilder[false, false] = new RequestBuilder("", "")
+end Exercise03

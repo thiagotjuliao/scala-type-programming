@@ -1,5 +1,7 @@
 package typeprog.ch11evidencetypesafestatemachines
 
+import scala.util.NotGiven
+
 /** Exercise 02 — chapter 06's JSON rules, without a priority trick.
   *
   * `Json` has two rules: anything with a `Numeric` is a bare number, anything
@@ -21,7 +23,6 @@ package typeprog.ch11evidencetypesafestatemachines
   * Hint: the string rule's premise can say what the type must *not* have.
   */
 object Exercise02:
-
   trait Show[A]:
     def show(a: A): String
 
@@ -33,11 +34,10 @@ object Exercise02:
   trait Json[A]:
     def encode(a: A): String
 
-  /** TODO: this parent trait goes; its rule moves into the companion. */
-  trait Fallbacks:
+  object Json:
     given numeric: [A: Numeric] => Json[A] = _.toString
 
-  object Json extends Fallbacks:
-    given quoted: [A: Show] => Json[A] = a => "\"" + summon[Show[A]].show(a) + "\""
+    given quoted: [A: Show] => (NotGiven[Numeric[A]]) => Json[A] = a =>
+      "\"" + summon[Show[A]].show(a) + "\""
 
   def encode[A: Json](a: A): String = summon[Json[A]].encode(a)

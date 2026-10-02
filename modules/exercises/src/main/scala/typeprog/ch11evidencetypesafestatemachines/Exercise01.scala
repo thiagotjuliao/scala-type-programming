@@ -22,10 +22,16 @@ object Exercise01:
   final case class Stack[A](items: List[A]):
 
     /** TODO: numbers only. */
-    def sum: A = ???
+    def sum(using Numeric[A]): A = items.sum
 
     /** TODO: stacks of stacks only. */
-    def flatten[B]: Stack[B] = ???
+    def flatten[B](using A =:= Stack[B]): Stack[B] =
+      Stack(items.map(_.items).flatten)
 
     /** TODO: stacks of pairs only. */
-    def unzip[X, Y]: (Stack[X], Stack[Y]) = ???
+    def unzip[X, Y](using A =:= (X, Y)): (Stack[X], Stack[Y]) =
+      val (vx, vy) = items
+        .asInstanceOf[List[(X, Y)]]
+        .foldLeft((Vector[X](), Vector[Y]())):
+          case ((vx, vy), (x, y)) => (vx :+ x, vy :+ y)
+      (Stack(vx.toList), Stack(vy.toList))
