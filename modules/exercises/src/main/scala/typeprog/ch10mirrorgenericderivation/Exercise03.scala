@@ -27,8 +27,8 @@ object Exercise03:
 
   object Values:
     /** TODO: every value of `A`, or a compile error. */
-    inline def derived[A](using m: Mirror.SumOf[A]): Values[A] = new Values[A]:
-      val all: List[A] = values[m.MirroredElemTypes, A]
+    inline def derived[A](using m: Mirror.SumOf[A]): Values[A] =
+      instance(values[m.MirroredElemTypes, A])
 
     inline def values[T <: Tuple, A]: List[A] = inline erasedValue[T] match
       case _: EmptyTuple => Nil
@@ -38,3 +38,7 @@ object Exercise03:
       case v: ValueOf[H] => v.value
       case _ => error("every case must be a singleton, with no parameters")
     }
+
+    def instance[A](values: List[A]): Values[A] =
+      new Values[A]:
+        val all: List[A] = values
