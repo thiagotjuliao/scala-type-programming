@@ -84,14 +84,18 @@ lazy val root = project
   )
 
 // The release gate, and the only definition of "green" in this repository:
-// everything is formatted, the answer key passes, and the exercises still
-// compile. `scripts/finish-chapter.sh` runs exactly this.
+// everything is formatted, the assertion helpers in core pass their own tests,
+// the answer key passes, and the exercises still compile.
+// `scripts/finish-chapter.sh` runs exactly this.
 //
 // `testFull`, not `test`: under sbt 2 the `test` task is incremental — it runs
 // what failed last time, what never ran, and what a changed dependency touched,
 // and nothing else. Excellent while working, useless as a gate, because the
 // greenest possible run of it is the one that ran no tests at all.
-addCommandAlias("verify", "scalafmtCheckAll; solutions/testFull; exercises/Test/compile")
+addCommandAlias(
+  "verify",
+  "scalafmtCheckAll; core/testFull; solutions/testFull; exercises/Test/compile"
+)
 
 // The practice run. Red by design — every unsolved exercise is a failure here,
 // and the failures are the to-do list.

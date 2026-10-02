@@ -36,7 +36,7 @@ them.
 
 | command | |
 | --- | --- |
-| `sbt verify` | the gate: `scalafmtCheckAll`, `solutions/testFull`, `exercises/Test/compile` |
+| `sbt verify` | the gate: `scalafmtCheckAll`, `core/testFull`, `solutions/testFull`, `exercises/Test/compile` |
 | `sbt practice` | `exercises/testFull` — red by design |
 | `./scripts/finish-chapter.sh NN` | stage, verify the staged tree, commit, tag `chNN`, push |
 | `./scripts/solve-chapter.sh NN BRANCH` | learner side: commit chapter NN's solved exercises to BRANCH and push; never `main` |

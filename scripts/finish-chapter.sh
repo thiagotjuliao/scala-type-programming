@@ -130,8 +130,8 @@ verify_staged_tree() {
   echo "  sbt verify ..."
   (
     cd "$VERIFY_DIR" || exit 1
-    # `verify` is scalafmtCheckAll + solutions/testFull + exercises/Test/compile;
-    # see build.sbt for why it is testFull and not test.
+    # `verify` is scalafmtCheckAll + core/testFull + solutions/testFull +
+    # exercises/Test/compile; see build.sbt for why it is testFull and not test.
     #
     # munit colours its stack traces, and a colour code in front of `at` hides
     # the frame from the filter — so the colours go first.
