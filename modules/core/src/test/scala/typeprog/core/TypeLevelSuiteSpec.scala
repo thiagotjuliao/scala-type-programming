@@ -27,3 +27,14 @@ class TypeLevelSuiteSpec extends TypeLevelSuite:
   test("a rejection can be pinned to its reason") {
     assertTypeErrorContains("val n: Int = \"not a number\"", "Found:")
   }
+
+  // `rejectedAtTheCallSite` fails where it is called, so the echoed source line
+  // is the assertion's own line, which spells out the fragment.
+  test("a reason only the echoed source line mentions is the wrong reason") {
+    intercept[munit.FailException](
+      assertTypeErrorContains("rejectedAtTheCallSite()", "a reason nobody gave")
+    )
+  }
+end TypeLevelSuiteSpec
+
+inline def rejectedAtTheCallSite(): Int = scala.compiletime.error("rejected")
