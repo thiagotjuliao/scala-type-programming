@@ -2,6 +2,8 @@ package typeprog.core
 
 import munit.{FunSuite, Location}
 
+import scala.compiletime.testing.typeCheckErrors
+
 /** The base class for every chapter's specs.
   *
   * It adds three assertions that talk about *compilation* instead of values.
@@ -43,13 +45,19 @@ abstract class TypeLevelSuite extends FunSuite:
     * Stricter than [[assertTypeError]], and the right assertion whenever the
     * error message is itself part of the design — a `compiletime.error` in an
     * inline method, say, whose whole purpose is the sentence it prints.
+    *
+    * The fragment is looked for in the messages alone. `compileErrors` also
+    * echoes the source line each error points at, and an error reported at the
+    * call site — a `compiletime.error`, a macro's error given no position —
+    * echoes the line of this very call, which spells out the fragment.
     */
   inline def assertTypeErrorContains(inline code: String, inline fragment: String)(using
       Location
   ): Unit =
+    val rejections = typeCheckErrors(code)
     val errors = compileErrors(code)
-    if errors.isEmpty then fail(s"expected this to be rejected, but it compiled:\n  $code")
-    else if !errors.contains(fragment) then
+    if rejections.isEmpty then fail(s"expected this to be rejected, but it compiled:\n  $code")
+    else if !rejections.exists(_.message.contains(fragment)) then
       fail(
         s"the snippet was rejected, but not for the expected reason.\n" +
           s"expected the error to mention: $fragment\ngot:\n$errors"
