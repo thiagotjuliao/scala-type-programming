@@ -15,6 +15,11 @@ import scala.quoted.*
   * `Printer.TypeReprShortCode` printer prints `String`, and keeps type
   * arguments: `List[Int]`.
   *
+  * The name is printed the same way, from the type rather than the symbol. The
+  * symbol is the declaration `Id[A]`, whose `name` is `Id`; for a parameter no
+  * field mentions — `case class Id[A](value: Long)` — that would describe
+  * `Id[User]` and `Id[Order]` identically.
+  *
   * A `Mirror` (chapter 10) has the field names and types too, but only as
   * types to compute with: there is no way to turn `MirroredElemTypes` into the
   * text `List[Int]` without the compiler's help. That — reading the program
@@ -32,4 +37,5 @@ object Exercise04:
       report.errorAndAbort(s"${Type.show[T]} is not a case class")
     val fields = symbol.caseFields.map: field =>
       s"${field.name}: ${tpe.memberType(field).show(using Printer.TypeReprShortCode)}"
-    Expr(fields.mkString(s"${symbol.name}(", ", ", ")"))
+    val name = tpe.show(using Printer.TypeReprShortCode)
+    Expr(fields.mkString(s"$name(", ", ", ")"))

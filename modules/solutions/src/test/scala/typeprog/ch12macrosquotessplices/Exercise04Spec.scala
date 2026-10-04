@@ -10,6 +10,10 @@ class Exercise04Spec extends TypeLevelSuite:
   final case class Box(items: List[Int], label: Option[String])
   final case class Empty()
   final class Plain(val x: Int)
+  final case class Wrap[A](a: A)
+  final case class Id[A](value: Long)
+  final class User
+  final class Order
 
   test("a case class, its fields and their types, as short names") {
     assertEquals(describe[Person], "Person(name: String, age: Int)")
@@ -17,6 +21,15 @@ class Exercise04Spec extends TypeLevelSuite:
 
   test("field types with type arguments") {
     assertEquals(describe[Box], "Box(items: List[Int], label: Option[String])")
+  }
+
+  test("a generic case class, named with its type arguments") {
+    assertEquals(describe[Wrap[Int]], "Wrap[Int](a: Int)")
+  }
+
+  test("a type parameter no field mentions still tells two types apart") {
+    assertEquals(describe[Id[User]], "Id[User](value: Long)")
+    assertEquals(describe[Id[Order]], "Id[Order](value: Long)")
   }
 
   test("a case class with no fields") {
