@@ -10,6 +10,9 @@ import scala.quoted.*
   *     types as short names, not `scala.Predef.String`;
   *   - type arguments are kept: `"Box(items: List[Int], label:
   *     Option[String])"`;
+  *   - a generic case class is named as the type it was given:
+  *     `describe[Wrap[Int]]` is `"Wrap[Int](a: Int)"`, and a type parameter no
+  *     field mentions still tells `Id[User]` from `Id[Order]`;
   *   - a case class with no fields is `"Empty()"`;
   *   - anything that is not a case class — `Int`, a plain class — does not
   *     compile, and the error says `not a case class`.

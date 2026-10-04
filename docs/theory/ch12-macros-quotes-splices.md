@@ -188,6 +188,13 @@ start and the end of the tree, and parentheses are not in the tree: for
 **Types printed in full.** `TypeRepr.show` prints `scala.Predef.String` and
 `scala.Int`; `show(using Printer.TypeReprShortCode)` prints `String` and `Int`.
 
+**A symbol has no type arguments.** `typeSymbol` is the declaration, so the
+`typeSymbol` of `Id[User]` is the class `Id[A]`, and its `name` is `Id`. For
+`case class Id[A](value: Long)`, a description built from the symbol's name is
+`Id(value: Long)` for `Id[User]` and `Id[Order]` alike. What a type was applied
+to is only in the `TypeRepr`: print the type, and ask it for each field's type
+with `memberType`.
+
 **Constant folding before the macro sees it.** The macro receives the typed
 tree, and `1 + 2` written with literals has already become `3` in it: `show`
 prints `3`, and a quoted pattern for a sum does not match. The source text

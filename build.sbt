@@ -3,6 +3,15 @@ ThisBuild / organization := "dev.thiagojuliao"
 ThisBuild / version := "0.1.0"
 
 lazy val commonSettings = Seq(
+  // Tests run from the class directories, not from jars. With sbt 2's default
+  // `exportJars := true` the test classpath is the packaged -tests.jar, and
+  // when compile is served from the disk cache (sbt 2.0.9) that jar is not
+  // repackaged: undoing an edit ran the tests against the bytecode of the last
+  // real compile, and after `clean` core/testFull ran no tests at all and
+  // reported success while solutions failed with NoClassDefFoundError.
+  // Measured 2026-10-02; the class directories always hold what the cache
+  // restored.
+  exportJars := false,
   scalacOptions ++= CompilerFlags.base :+
     // Type-level recursion (Peano arithmetic, tuple folds, derivation) blows
     // past the default budget of 32 long before it blows past anything that
@@ -84,14 +93,18 @@ lazy val root = project
   )
 
 // The release gate, and the only definition of "green" in this repository:
-// everything is formatted, the answer key passes, and the exercises still
-// compile. `scripts/finish-chapter.sh` runs exactly this.
+// everything is formatted, the assertion helpers in core pass their own tests,
+// the answer key passes, and the exercises still compile.
+// `scripts/finish-chapter.sh` runs exactly this.
 //
 // `testFull`, not `test`: under sbt 2 the `test` task is incremental — it runs
 // what failed last time, what never ran, and what a changed dependency touched,
 // and nothing else. Excellent while working, useless as a gate, because the
 // greenest possible run of it is the one that ran no tests at all.
-addCommandAlias("verify", "scalafmtCheckAll; solutions/testFull; exercises/Test/compile")
+addCommandAlias(
+  "verify",
+  "scalafmtCheckAll; core/testFull; solutions/testFull; exercises/Test/compile"
+)
 
 // The practice run. Red by design — every unsolved exercise is a failure here,
 // and the failures are the to-do list.
