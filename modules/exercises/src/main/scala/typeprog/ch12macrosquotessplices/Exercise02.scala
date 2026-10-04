@@ -2,6 +2,8 @@ package typeprog.ch12macrosquotessplices
 
 import scala.quoted.*
 import scala.util.matching.Regex
+import scala.util.Success
+import scala.util.Failure
 
 /** Exercise 02 — a regular expression checked while compiling.
   *
@@ -25,4 +27,14 @@ object Exercise02:
   inline def regex(inline pattern: String): Regex = ${ regexImpl('pattern) }
 
   /** TODO: the checked `Regex`, or a compile error. */
-  def regexImpl(pattern: Expr[String])(using Quotes): Expr[Regex] = '{ ??? }
+  def regexImpl(pattern: Expr[String])(using Quotes): Expr[Regex] =
+    import quotes.reflect.*
+
+    val value =
+      pattern.value.getOrElse(report.errorAndAbort("argument must be a literal"))
+
+    scala.util.Try(java.util.regex.Pattern.compile(value)) match
+      case Success(_) =>
+        val expr = Expr(value)
+        '{ $expr.r }
+      case Failure(e) => report.errorAndAbort("invalid regex: " + e.getMessage())

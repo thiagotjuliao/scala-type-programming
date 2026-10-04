@@ -31,4 +31,21 @@ object Exercise04:
   inline def describe[T]: String = ${ describeImpl[T] }
 
   /** TODO: the description, or a compile error. */
-  def describeImpl[T: Type](using Quotes): Expr[String] = '{ ??? }
+  def describeImpl[T: Type](using Quotes): Expr[String] =
+    import quotes.reflect.*
+
+    val tpe = TypeRepr.of[T]
+    val sym = tpe.typeSymbol
+
+    val name = tpe.show(using Printer.TypeReprShortCode)
+
+    if !sym.flags.is(Flags.Case) then report.errorAndAbort(s"$name is not a case class")
+
+    val fields = sym.caseFields.map: f =>
+      val ftpe = tpe.memberType(f)
+      val fieldName = f.name
+      val typeName = ftpe.show(using Printer.TypeReprShortCode)
+      s"$fieldName: $typeName"
+
+    val result = fields.mkString(s"$name(", ", ", ")")
+    Expr(result)

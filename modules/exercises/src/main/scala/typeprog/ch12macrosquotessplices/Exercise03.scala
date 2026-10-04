@@ -26,4 +26,15 @@ object Exercise03:
   inline def nameOf(inline a: Any): String = ${ nameOfImpl('a) }
 
   /** TODO: the name, or a compile error. */
-  def nameOfImpl(a: Expr[Any])(using Quotes): Expr[String] = '{ ??? }
+  def nameOfImpl(a: Expr[Any])(using Quotes): Expr[String] =
+    import quotes.reflect.*
+
+    def getName(t: Term): String =
+      t match
+        case Ident(n) => n
+        case Inlined(_, _, t) => getName(t)
+        case Apply(t, Nil) => getName(t)
+        case Select(_, n) => n
+        case _ => report.errorAndAbort("expected a name", a.asTerm.pos)
+
+    Expr(getName(a.asTerm))

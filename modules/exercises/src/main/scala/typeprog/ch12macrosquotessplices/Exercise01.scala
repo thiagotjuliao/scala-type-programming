@@ -28,4 +28,9 @@ object Exercise01:
   inline def debug[A](inline a: A): String = ${ debugImpl('a) }
 
   /** TODO: the source text, `" = "`, and the value. */
-  def debugImpl[A: Type](a: Expr[A])(using Quotes): Expr[String] = '{ ??? }
+  def debugImpl[A: Type](a: Expr[A])(using Quotes): Expr[String] =
+    import quotes.reflect.*
+
+    val term = a.asTerm
+    val sourceCode = Expr(term.pos.sourceCode.getOrElse(a.show))
+    '{ $sourceCode + " = " + $a }
