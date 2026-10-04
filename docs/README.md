@@ -19,9 +19,31 @@ out of sequence.
 | 11 | [Evidence & type-safe state machines](theory/ch11-evidence-type-safe-state-machines.md) | `NotGiven`, phantom state, builders that cannot be misused | `ch11` |
 | 12 | [Macros: quotes & splices](theory/ch12-macros-quotes-splices.md) | `'{ }`, `${ }`, `Expr`, `TypeRepr`, when to stop | `ch12` |
 
-Chapters `ch20` and up are reserved for applied case studies — a type-safe
-builder, units of measure, compile-time schema validation — so the core trail
-can be extended without renumbering.
+## Case studies
+
+Chapters `ch20` and up are applied case studies, numbered apart so the core
+trail can be extended without renumbering. Each one builds a single small
+library across its exercises, using chapters already done rather than
+introducing new features; they run from the easiest to the hardest, and between
+them they use every chapter at least once.
+
+Each case study is self-contained. One that imported another's solution would
+stop compiling, on the learner's side, until that other one was solved — so
+chapter 26 rebuilds the minimal codec and interpolator it needs instead of
+importing chapters 24 and 25.
+
+Planned on 2026-10-04; a row gets its link and its tag when the chapter is
+written.
+
+| # | case study | builds | uses | tag |
+| --- | --- | --- | --- | --- |
+| 20 | Validation | a `Validated` that accumulates errors, with its own `Functor` and `Applicative` | 01, 02, 06 | |
+| 21 | Units of measure | `Quantity[U]`, where `m / s` has the right unit and adding metres to seconds does not compile | 04, 05, 07 | |
+| 22 | Typed builders and protocols | a `build()` that needs every required field, a connection that only sends once open | 03, 09, 11 | |
+| 23 | Typed query builder | a `select` that only takes the table's columns and returns the matching tuple | 03, 07, 09 | |
+| 24 | Derived JSON codec | `derives Encoder, Decoder`, with a readable compile error for what is not supported | 06, 08, 10 | |
+| 25 | Macro-checked interpolator | `json"..."`, validated and type-checked against its arguments at compile time | 08, 12 | |
+| 26 | Typed HTTP API | endpoints as values whose type decides the handler, the router and the client — every chapter, 01 to 12 | 01–12 | |
 
 ## Reading one chapter
 
