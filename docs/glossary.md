@@ -52,3 +52,4 @@ where the term is introduced, not everywhere it appears.
 | **semigroup** | a type with an associative `combine`; how two errors become one | 20 |
 | **applicative functor** | `pure` and `map2`: combines results computed independently, so it can keep every error | 20 |
 | **`traverse`** | applies an effectful function to every element and gathers the results into one effect | 20 |
+| **dimension** | a unit written as the exponents of base units, `(1, -1, 0)` for m/s, so that units can be computed | 21 |
