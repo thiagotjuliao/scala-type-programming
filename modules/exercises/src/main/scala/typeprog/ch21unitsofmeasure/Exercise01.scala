@@ -1,5 +1,7 @@
 package typeprog.ch21unitsofmeasure
 
+import compiletime.ops.int.*
+
 /** Exercise 01 — multiply and divide, and let the compiler work out the unit.
   *
   * `Quantity[U]` is chapter 05's, from its exercise 04, given here solved,
@@ -38,10 +40,12 @@ object Exercise01:
   def kilograms(d: Double): Quantity[Kilogram] = d
 
   /** TODO: the unit of a product. */
-  type Mul[A <: Dim, B <: Dim] = Nothing
+  type Mul[A <: Dim, B <: Dim] <: Dim = (A, B) match
+    case ((a1, a2, a3), (b1, b2, b3)) => (a1 + b1, a2 + b2, a3 + b3)
 
   /** TODO: the unit of a quotient. */
-  type Div[A <: Dim, B <: Dim] = Nothing
+  type Div[A <: Dim, B <: Dim] <: Dim = (A, B) match
+    case ((a1, a2, a3), (b1, b2, b3)) => (a1 - b1, a2 - b2, a3 - b3)
 
   extension [U <: Dim](q: Quantity[U])
     def value: Double = q
@@ -50,8 +54,8 @@ object Exercise01:
     def -(r: Quantity[U]): Quantity[U] = q - r
 
     /** TODO: implement. */
-    def *[V <: Dim](r: Quantity[V]): Quantity[Mul[U, V]] = ???
+    def *[V <: Dim](r: Quantity[V]): Quantity[Mul[U, V]] = q * r
 
     /** TODO: implement. */
-    def /[V <: Dim](r: Quantity[V]): Quantity[Div[U, V]] = ???
+    def /[V <: Dim](r: Quantity[V]): Quantity[Div[U, V]] = q / r
 end Exercise01
