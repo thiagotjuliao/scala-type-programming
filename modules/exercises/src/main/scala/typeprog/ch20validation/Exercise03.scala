@@ -64,8 +64,31 @@ object Exercise03:
     def map2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
 
     /** TODO: implement, from `pure` and `map2` only. */
-    def map[A, B](fa: F[A])(f: A => B): F[B] = ???
+    def map[A, B](fa: F[A])(f: A => B): F[B] =
+      map2(fa, pure(f))((a, f) => f(a))
 
   /** TODO: the instances. */
-  object Applicative
+  object Applicative:
+    given Applicative[Option] = new Applicative[Option]:
+      override def pure[A](a: A): Option[A] = Option(a)
+
+      override def map2[A, B, C](fa: Option[A], fb: Option[B])(f: (A, B) => C): Option[C] =
+        (fa, fb) match
+          case (None, _) => None
+          case (_, None) => None
+          case (Some(a), Some(b)) => Some(f(a, b))
+
+    given [E: Semigroup] => Applicative[[A] =>> Validated[E, A]] =
+      new Applicative[[A] =>> Validated[E, A]]:
+        override def pure[A](a: A): Validated[E, A] = Valid(a)
+
+        override def map2[A, B, C](fa: Validated[E, A], fb: Validated[E, B])(
+            f: (A, B) => C
+        ): Validated[E, C] =
+          (fa, fb) match
+            case (Valid(a), Valid(b)) => Valid(f(a, b))
+            case (Invalid(e1), Invalid(e2)) => Invalid(e1.combine(e2))
+            case (_, Invalid(e)) => Invalid(e)
+            case (Invalid(e), _) => Invalid(e)
+
 end Exercise03

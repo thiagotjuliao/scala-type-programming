@@ -21,12 +21,18 @@ package typeprog.ch20validation
   */
 object Exercise01:
 
-  enum Validated[E, A]:
+  enum Validated[+E, +A]:
     case Valid(value: A)
     case Invalid(errors: E)
 
     /** TODO: implement. */
-    def map[B](f: A => B): Validated[E, B] = ???
+    def map[B](f: A => B): Validated[E, B] =
+      this match
+        case Valid(a) => Valid(f(a))
+        case Invalid(e) => Invalid(e)
 
     /** TODO: implement. */
-    def fold[C](onInvalid: E => C, onValid: A => C): C = ???
+    def fold[C](onInvalid: E => C, onValid: A => C): C =
+      this match
+        case Valid(a) => onValid(a)
+        case Invalid(e) => onInvalid(e)

@@ -71,7 +71,11 @@ object Exercise04:
         case (_, Invalid(e)) => Invalid(e)
 
   /** TODO: implement. */
-  def traverse[F[_]: Applicative, A, B](as: List[A])(f: A => F[B]): F[List[B]] = ???
+  def traverse[F[_]: Applicative, A, B](as: List[A])(f: A => F[B]): F[List[B]] =
+    val ev = summon[Applicative[F]]
+
+    as.foldRight(ev.pure(List.empty[B])): (a, acc) =>
+      ev.map2(f(a), acc)(_ :: _)
 
   type Checked[A] = Validated[List[String], A]
 
@@ -87,8 +91,17 @@ object Exercise04:
     if s.contains('@') then Valid(s) else Invalid(List("email has no @"))
 
   /** TODO: implement. */
-  def signUp(name: String, age: Int, email: String): Checked[User] = ???
+  def signUp(name: String, age: Int, email: String)(using ev: Applicative[Checked]): Checked[User] =
+    ev.map2(
+      ev.map2(checkName(name), checkAge(age))((a, b) => (a, b)),
+      checkEmail(email)
+    ):
+      case ((a, b), c) => User(a, b, c)
 
   /** TODO: implement. */
-  def signUpAll(forms: List[(String, Int, String)]): Checked[List[User]] = ???
+  def signUpAll(forms: List[(String, Int, String)])(using
+      Applicative[Checked]
+  ): Checked[List[User]] =
+    traverse(forms)(signUp)
+
 end Exercise04

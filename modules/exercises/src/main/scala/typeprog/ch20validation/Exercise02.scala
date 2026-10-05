@@ -40,9 +40,23 @@ object Exercise02:
     extension (x: A) def combine(y: A): A
 
   /** TODO: the instances. */
-  object Semigroup
+  object Semigroup:
+    given [T] => Semigroup[List[T]] = new Semigroup[List[T]]:
+      extension (xs: List[T]) override def combine(ys: List[T]): List[T] = xs ++ ys
+
+    given Semigroup[Int] = new Semigroup[Int]:
+      extension (x: Int) override def combine(y: Int): Int = x + y
 
   /** TODO: implement, for error types that can be combined. */
-  def map2[E, A, B, C](va: Validated[E, A], vb: Validated[E, B])(f: (A, B) => C): Validated[E, C] =
-    ???
+  import Validated.*
+
+  def map2[E: Semigroup, A, B, C](va: Validated[E, A], vb: Validated[E, B])(
+      f: (A, B) => C
+  ): Validated[E, C] =
+    (va, vb) match
+      case (Valid(a), Valid(b)) => Valid(f(a, b))
+      case (Invalid(e1), Invalid(e2)) => Invalid(e1.combine(e2))
+      case (_, Invalid(e)) => Invalid(e)
+      case (Invalid(e), _) => Invalid(e)
+
 end Exercise02
