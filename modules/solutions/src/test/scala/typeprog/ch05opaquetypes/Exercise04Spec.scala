@@ -42,7 +42,8 @@ class Exercise04Spec extends TypeLevelSuite:
     assertTypeChecks("val d: Quantity[Meters] = Quantity.of[Meters](1.0).times(3.0)")
   }
 
-  // `value` exists on the stub too, so these compile there and fail on `???`.
+  // `value` exists on the stub too, and `+` is `Double`'s own there, so these
+  // compile against it and fail on `???`.
   test("the arithmetic is the arithmetic of the numbers") {
     assertEquals((Quantity.of[Meters](1.0) + Quantity.of[Meters](2.0)).value, 3.0)
     assertEquals(Quantity.of[Meters](10.0).per(Quantity.of[Seconds](2.0)).value, 5.0)
