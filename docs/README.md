@@ -38,7 +38,7 @@ written.
 | # | case study | builds | uses | tag |
 | --- | --- | --- | --- | --- |
 | 20 | [Validation](theory/ch20-validation.md) | a `Validated` that accumulates errors, with its own `Functor` and `Applicative` | 01, 02, 06 | `ch20` |
-| 21 | Units of measure | `Quantity[U]`, where `m / s` has the right unit and adding metres to seconds does not compile | 04, 05, 07 | |
+| 21 | [Units of measure](theory/ch21-units-of-measure.md) | `Quantity[U]`, where `m / s` has the right unit and adding metres to seconds does not compile | 01, 04, 05, 07, 09 | `ch21` |
 | 22 | Typed builders and protocols | a `build()` that needs every required field, a connection that only sends once open | 03, 09, 11 | |
 | 23 | Typed query builder | a `select` that only takes the table's columns and returns the matching tuple | 03, 07, 09 | |
 | 24 | Derived JSON codec | `derives Encoder, Decoder`, with a readable compile error for what is not supported | 06, 08, 10 | |
