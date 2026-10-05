@@ -49,3 +49,6 @@ where the term is introduced, not everywhere it appears.
 | **macro** | an `inline` method whose body is a splice: code run by the compiler, on the program being compiled | 12 |
 | **quote / splice** (`'{ }`, `${ }`) | moving between code as value and code as expression | 12 |
 | **`Expr` / `TypeRepr`** | a typed expression, and the compiler's view of a type | 12 |
+| **semigroup** | a type with an associative `combine`; how two errors become one | 20 |
+| **applicative functor** | `pure` and `map2`: combines results computed independently, so it can keep every error | 20 |
+| **`traverse`** | applies an effectful function to every element and gathers the results into one effect | 20 |
