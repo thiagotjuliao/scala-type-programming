@@ -19,6 +19,12 @@ package typeprog.ch05opaquetypes
   * no unit anywhere but in the types. `Meters`, `Seconds` and `/` are never
   * instantiated.
   *
+  * `+` is not in the stub: while `Quantity` is an alias, `Double`'s own `+`
+  * would always be chosen over it, and the compiler warns about a method that
+  * can never be called. The spec calls `+` directly, so write it in the same
+  * step that makes `Quantity` a type of its own: with one and not the other,
+  * the spec stops compiling, and the error says that `+` is missing.
+  *
   * Hint: an opaque type can take type parameters, and nothing obliges them to
   * appear in its representation.
   */
