@@ -53,3 +53,4 @@ where the term is introduced, not everywhere it appears.
 | **applicative functor** | `pure` and `map2`: combines results computed independently, so it can keep every error | 20 |
 | **`traverse`** | applies an effectful function to every element and gathers the results into one effect | 20 |
 | **dimension** | a unit written as the exponents of base units, `(1, -1, 0)` for m/s, so that units can be computed | 21 |
+| **session type** | a protocol as a type: which message comes next is part of the channel's type | 22 |
