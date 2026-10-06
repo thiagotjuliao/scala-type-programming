@@ -288,6 +288,31 @@ Note: a match type could not be fully reduced:
   matches none of the cases
 ```
 
+**`Nothing` as the scrutinee.** A match type applied to `Nothing` does not
+reduce, whatever its cases — not even to a `case Nothing`:
+
+```scala
+type Found[X] = X match
+  case Int => true
+  case _ => false
+```
+
+```text
+Cannot prove that Found[Nothing] =:= (false : Boolean).
+
+Note: a match type could not be fully reduced:
+
+  trying to reduce  Found[Nothing]
+  failed since selector Nothing
+  is uninhabited (there are no values of that type).
+```
+
+With `case Nothing => true` first, it is stuck too, without the note. It bites
+when one match type returns `Nothing` for "not found" and another matches on
+that result — a `Contains` written as a match on a `Lookup`. Return a type that
+can be matched on, or write the second match type over the original input
+(checked 2026-10-06, Scala 3.9.0).
+
 **A mirroring `match` that is almost right.** A default case added to be safe,
 or two cases swapped, and every branch fails:
 
