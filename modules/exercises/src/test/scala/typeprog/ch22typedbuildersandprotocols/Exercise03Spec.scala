@@ -38,6 +38,15 @@ class Exercise03Spec extends TypeLevelSuite:
     )
   }
 
+  // Against the stub there is no server.Conn at all, and that rejection is
+  // for another reason; the fragment is what makes this fail there.
+  test("a connection is opened, never built") {
+    assertTypeErrorContains(
+      "new server.Conn[(Hello, Auth, Data), EmptyTuple]((Hello(\"ada\"), Auth(\"t\"), Data(\"42\")))",
+      "cannot be accessed"
+    )
+  }
+
   // Compared as Any: against the stub, close returns a plain Tuple.
   test("the transcript holds the messages sent, in order") {
     val transcript =
