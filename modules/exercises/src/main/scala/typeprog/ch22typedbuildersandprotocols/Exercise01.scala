@@ -28,17 +28,25 @@ object Exercise01:
 
   type Schema = (("name", String), ("email", String), ("age", Int))
 
-  /** TODO: the type of `K`'s value in `S`. */
-  type Lookup[S <: Tuple, K] = Any
+  type Lookup[S <: Tuple, K] = S match
+    case EmptyTuple => Nothing
+    case ((n *: v *: EmptyTuple) *: t) =>
+      n match
+        case K => v
+        case _ => Lookup[t, K]
 
-  /** TODO: whether `K` is an element of `T`. */
-  type Contains[T <: Tuple, K] = Boolean
+  type Contains[T <: Tuple, K] = T match
+    case EmptyTuple => false
+    case K *: _ => true
+    case _ *: t => Contains[t, K]
 
   final class Builder[S <: Tuple] private (val values: Map[String, Any]):
 
-    /** TODO: the value's type from the schema, and each key once. */
-    def set[K <: String & Singleton](key: K)(value: Any): Builder[K *: S] =
+    def set[K <: String & Singleton](key: K)(value: Lookup[Schema, K])(using
+        Contains[S, K] =:= false
+    ): Builder[K *: S] =
       new Builder(values.updated(key, value))
 
   object Builder:
     def apply(): Builder[EmptyTuple] = new Builder(Map.empty)
+end Exercise01

@@ -29,15 +29,14 @@ object Exercise03:
   final case class Auth(token: String)
   final case class Data(payload: String)
 
-  /** TODO: one connection type per server. */
-  final class Conn[Sent <: Tuple, Left <: Tuple](val sent: Sent):
-
-    /** TODO: only the next message due. */
-    def send(message: Any): Conn[Sent, Left] = ???
-
   final class Server[P <: Tuple]:
+    final class Conn[Sent <: Tuple, Left <: Tuple] private[Server] (val sent: Sent):
 
-    def connect(): Conn[EmptyTuple, P] = Conn(EmptyTuple)
+      def send(
+          message: Tuple.Head[Left]
+      ): Conn[Tuple.Append[Sent, Tuple.Head[Left]], Tuple.Tail[Left]] =
+        new Conn(sent :* message)
 
-    /** TODO: only a complete conversation, on this server. */
-    def close(conn: Conn[?, ?]): Tuple = ???
+    def connect(): this.Conn[EmptyTuple, P] = Conn(EmptyTuple)
+
+    def close(conn: this.Conn[P, EmptyTuple]): P = conn.sent

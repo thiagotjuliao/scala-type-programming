@@ -1,5 +1,7 @@
 package typeprog.ch22typedbuildersandprotocols
 
+import scala.annotation.implicitNotFound
+
 /** Exercise 02 — `build` only when every required field is set.
   *
   * `User` has two required fields, `name` and `email`, listed in `Required`,
@@ -36,8 +38,12 @@ object Exercise02:
 
   type Required = ("name", "email")
 
-  /** TODO: whether every element of `R` is an element of `S`. */
-  type AllIn[R <: Tuple, S <: Tuple] = Boolean
+  type AllIn[R <: Tuple, S <: Tuple] = R match
+    case EmptyTuple => true
+    case h *: t =>
+      Contains[S, h] match
+        case true => AllIn[t, S]
+        case _ => false
 
   final case class User(name: String, email: String, age: Option[Int])
 
@@ -48,9 +54,18 @@ object Exercise02:
     ): Builder[K *: S] =
       new Builder(values.updated(key, value))
 
-    /** TODO: only once every required field is set. */
-    def build: User = ???
+    def build(using Builder.Completed[S]): User =
+      User(
+        values("name").asInstanceOf[Lookup[Schema, "name"]],
+        values("email").asInstanceOf[Lookup[Schema, "email"]],
+        values.get("age").map(_.asInstanceOf[Lookup[Schema, "age"]])
+      )
 
   object Builder:
+    @implicitNotFound("cannot build a User - missing required fields")
+    sealed trait Completed[S <: Tuple]
+
+    given [S <: Tuple] => (AllIn[Required, S] =:= true) => Completed[S] = new Completed[S] {}
+
     def apply(): Builder[EmptyTuple] = new Builder(Map.empty)
 end Exercise02
