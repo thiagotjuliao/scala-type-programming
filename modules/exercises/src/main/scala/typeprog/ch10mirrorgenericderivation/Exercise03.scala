@@ -26,7 +26,6 @@ object Exercise03:
     def all: List[A]
 
   object Values:
-    /** TODO: every value of `A`, or a compile error. */
     inline def derived[A](using m: Mirror.SumOf[A]): Values[A] =
       instance(values[m.MirroredElemTypes, A])
 

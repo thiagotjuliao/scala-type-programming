@@ -36,7 +36,6 @@ object Exercise04:
   /** The unit of a ratio. Never instantiated: written infix, `Meters / Seconds`. */
   sealed trait /[A, B]
 
-  /** TODO: make the unit part of the type outside this object. */
   opaque type Quantity[U] = Double
 
   object Quantity:
@@ -44,18 +43,14 @@ object Exercise04:
 
   extension [U](q: Quantity[U])
 
-    /** TODO: implement. */
     def +(other: Quantity[U]): Quantity[U] =
       q + other
 
-    /** TODO: the result type, and the body. */
     def per[V](other: Quantity[V]): Quantity[U / V] =
       Quantity.of(q / other)
 
-    /** TODO: implement. */
     def times(factor: Double): Quantity[U] =
       q * factor
 
-    /** TODO: implement. */
     def value: Double = q
 end Exercise04

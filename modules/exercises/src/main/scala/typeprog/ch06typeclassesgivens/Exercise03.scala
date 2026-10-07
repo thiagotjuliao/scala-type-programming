@@ -36,7 +36,6 @@ object Exercise03:
   trait Json[A]:
     def encode(a: A): String
 
-  /** TODO: the rules are right; which one wins is not. */
   trait Fallbacks:
     given quoted: [A: Show] => Json[A] = a => "\"" + summon[Show[A]].show(a) + "\""
 

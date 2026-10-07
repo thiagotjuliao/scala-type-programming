@@ -39,11 +39,9 @@ object Exercise01:
   def seconds(d: Double): Quantity[Second] = d
   def kilograms(d: Double): Quantity[Kilogram] = d
 
-  /** TODO: the unit of a product. */
   type Mul[A <: Dim, B <: Dim] <: Dim = (A, B) match
     case ((a1, a2, a3), (b1, b2, b3)) => (a1 + b1, a2 + b2, a3 + b3)
 
-  /** TODO: the unit of a quotient. */
   type Div[A <: Dim, B <: Dim] <: Dim = (A, B) match
     case ((a1, a2, a3), (b1, b2, b3)) => (a1 - b1, a2 - b2, a3 - b3)
 
@@ -53,9 +51,7 @@ object Exercise01:
     def +(r: Quantity[U]): Quantity[U] = q + r
     def -(r: Quantity[U]): Quantity[U] = q - r
 
-    /** TODO: implement. */
     def *[V <: Dim](r: Quantity[V]): Quantity[Mul[U, V]] = q * r
 
-    /** TODO: implement. */
     def /[V <: Dim](r: Quantity[V]): Quantity[Div[U, V]] = q / r
 end Exercise01

@@ -30,7 +30,6 @@ object Exercise02:
 
     def headers: List[(String, String)] = recorded
 
-    /** TODO: the result type. */
     def header(name: String, value: String): this.type =
       recorded = recorded :+ (name -> value)
       this
@@ -40,12 +39,10 @@ object Exercise02:
 
     def payload: String = json
 
-    /** TODO: the result type. */
     def body(content: String): this.type =
       json = content
       this
 
-  /** TODO: the result type, and the body. */
   def withHeaders[T <: Request](r: T)(pairs: (String, String)*): T =
     pairs.foldLeft(r):
       case (r, (n, v)) => r.header(n, v)

@@ -26,7 +26,6 @@ object Exercise02:
 
   inline def regex(inline pattern: String): Regex = ${ regexImpl('pattern) }
 
-  /** TODO: the checked `Regex`, or a compile error. */
   def regexImpl(pattern: Expr[String])(using Quotes): Expr[Regex] =
     import quotes.reflect.*
 

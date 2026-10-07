@@ -22,10 +22,8 @@ import scala.deriving.*
   */
 object Exercise01:
 
-  /** TODO: the name of `T`. */
   inline def typeName[T](using m: Mirror.Of[T]): String =
     constValue[m.MirroredLabel]
 
-  /** TODO: the names of `T`'s fields, in order. */
   inline def fieldNames[T](using m: Mirror.ProductOf[T]): List[String] =
     constValueTuple[m.MirroredElemLabels].toList.map(_.toString)

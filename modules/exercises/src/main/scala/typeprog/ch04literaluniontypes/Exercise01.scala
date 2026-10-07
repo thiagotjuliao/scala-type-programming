@@ -19,15 +19,12 @@ package typeprog.ch04literaluniontypes
   */
 object Exercise01:
 
-  /** TODO: replace `Unsolved` with the three codes. */
   type Status = 200 | 404 | 500
 
-  /** TODO: each must keep its literal type. */
   val Ok: 200 = 200
   val NotFound: 404 = 404
   val ServerError: 500 = 500
 
-  /** TODO: implement. */
   def describe(status: Status): String =
     status match
       case Ok => "OK"

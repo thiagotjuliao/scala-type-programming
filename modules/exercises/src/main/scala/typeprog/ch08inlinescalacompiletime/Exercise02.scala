@@ -22,7 +22,6 @@ import scala.compiletime.*
   */
 object Exercise02:
 
-  /** TODO: the default for `T`, or a compile error. */
   inline def default[T]: T = inline erasedValue[T] match
     case _: Int => 0.asInstanceOf[T]
     case _: Long => 0L.asInstanceOf[T]

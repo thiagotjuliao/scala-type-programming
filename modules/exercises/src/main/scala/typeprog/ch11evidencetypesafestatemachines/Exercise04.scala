@@ -36,14 +36,12 @@ object Exercise04:
   sealed trait Lock
   sealed trait Unlock
 
-  /** TODO: replace `Unsolved` with the transition table. */
   type Next[S, E] = (S, E) match
     case (Opened, Close) => Closed
     case (Closed, Open) => Opened
     case (Closed, Lock) => Locked
     case (Locked, Unlock) => Closed
 
-  /** TODO: an instance for exactly the allowed pairs, and a message for the rest. */
   @implicitNotFound("cannot ${E} a door that is ${S}")
   sealed trait Allowed[S, E]
 
@@ -54,7 +52,6 @@ object Exercise04:
 
   final class Door[S] private ():
 
-    /** TODO: only for an allowed event, into the state the table gives. */
     def on[E](using a: Allowed[S, E]): Door[Next[S, E]] = Door()
 
   object Door:

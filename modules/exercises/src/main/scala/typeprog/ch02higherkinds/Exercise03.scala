@@ -18,10 +18,8 @@ package typeprog.ch02higherkinds
   */
 object Exercise03:
 
-  /** TODO: replace `Unsolved` with `Either`, `E` on the right. */
   type OnLeft[E] = [X] =>> Either[X, E]
 
-  /** TODO: implement. */
   def leftFunctor[E]: Functor[OnLeft[E]] = new Functor[OnLeft[E]]:
     def map[A, B](fa: OnLeft[E][A])(f: A => B): OnLeft[E][B] =
       fa match

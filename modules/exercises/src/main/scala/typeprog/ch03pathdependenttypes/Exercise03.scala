@@ -22,10 +22,8 @@ package typeprog.ch03pathdependenttypes
   */
 object Exercise03:
 
-  /** TODO: the type, and the value. */
   val parser: (k: Key) => String => Option[k.Value] = k => s => k.parse(s)
 
-  /** TODO: the type of `read`, the result type, and the body. */
   def loadWith(raw: Map[String, String])(
       read: (k: Key) => String => Option[k.Value]
   ): (k: Key) => Option[k.Value] = k => raw.get(k.name).flatMap(s => read(k)(s))

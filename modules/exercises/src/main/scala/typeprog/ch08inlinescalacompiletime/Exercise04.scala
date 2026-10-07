@@ -31,7 +31,6 @@ object Exercise04:
     given Show[Int] = i => s"#$i"
     given Show[Boolean] = b => if b then "yes" else "no"
 
-  /** TODO: a `Show` if there is one, a `Numeric` if not, a compile error if neither. */
   inline def describe[A](a: A): String = summonFrom:
     case ev: Show[A] => ev.show(a)
     case _: Numeric[A] => s"number $a"

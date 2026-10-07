@@ -17,7 +17,6 @@ package typeprog.ch07matchtypes
   */
 object Exercise02:
 
-  /** TODO: replace `Unsolved` with a recursive match type. */
   type Leaf[X] = X match
     case Option[a] => Leaf[a]
     case Either[?, a] => Leaf[a]

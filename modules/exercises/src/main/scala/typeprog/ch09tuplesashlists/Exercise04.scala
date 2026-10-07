@@ -26,19 +26,15 @@ object Exercise04:
 
   final class Vec[N <: Int, +A] private (val items: Vector[A]):
 
-    /** TODO: one longer. */
     def ::[B >: A](b: B): Vec[N + 1, B] =
       Vec(b +: items)
 
-    /** TODO: as long as both. */
     def ++[M <: Int, B >: A](other: Vec[M, B]): Vec[N + M, B] =
       Vec(items ++ other.items)
 
-    /** TODO: only when not empty. */
     def head(using N > 0 =:= true): A =
       items.head
 
-    /** TODO: only when not empty, and one shorter. */
     def tail(using N > 0 =:= true): Vec[N - 1, A] =
       Vec(items.tail)
 

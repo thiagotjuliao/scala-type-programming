@@ -31,19 +31,16 @@ object Exercise01:
   type _5 = Succ[_4]
   type _6 = Succ[_5]
 
-  /** TODO: replace `Unsolved` with a match type. */
   type Plus[A <: Nat, B <: Nat] = (A, B) match
     case (a, Zero) => a
     case (Zero, b) => b
     case (Succ[a], b) => Plus[a, Succ[b]]
 
-  /** TODO: replace `Unsolved` with a match type. */
   type Times[A <: Nat, B <: Nat] = (A, B) match
     case (_, Zero) => Zero
     case (Zero, _) => Zero
     case (Succ[a], b) => Plus[b, Times[a, b]]
 
-  /** TODO: replace `Unsolved` with a match type. */
   type ToInt[N <: Nat] = N match
     case Zero => 0
     case Succ[Zero] => 1

@@ -30,7 +30,6 @@ object Exercise04:
 
   inline def describe[T]: String = ${ describeImpl[T] }
 
-  /** TODO: the description, or a compile error. */
   def describeImpl[T: Type](using Quotes): Expr[String] =
     import quotes.reflect.*
 

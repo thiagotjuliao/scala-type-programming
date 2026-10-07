@@ -39,7 +39,6 @@ object Exercise02:
   trait Semigroup[A]:
     extension (x: A) def combine(y: A): A
 
-  /** TODO: the instances. */
   object Semigroup:
     given [T] => Semigroup[List[T]] = new Semigroup[List[T]]:
       extension (xs: List[T]) override def combine(ys: List[T]): List[T] = xs ++ ys
@@ -47,7 +46,6 @@ object Exercise02:
     given Semigroup[Int] = new Semigroup[Int]:
       extension (x: Int) override def combine(y: Int): Int = x + y
 
-  /** TODO: implement, for error types that can be combined. */
   import Validated.*
 
   def map2[E: Semigroup, A, B, C](va: Validated[E, A], vb: Validated[E, B])(

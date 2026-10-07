@@ -31,7 +31,6 @@ object Exercise02:
     given Show[Boolean] = _.toString
     given Show[String] = s => "\"" + s + "\""
 
-    /** TODO: a `Show` for any case class. */
     inline def derived[A](using m: Mirror.ProductOf[A]): Show[A] =
       val name = constValue[m.MirroredLabel]
       val labels = constValueTuple[m.MirroredElemLabels].toList.map(_.toString)

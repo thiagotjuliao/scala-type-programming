@@ -22,7 +22,6 @@ import scala.compiletime.ops.int.*
   */
 object Exercise02:
 
-  /** TODO: replace `Unsolved` with a match type. */
   type IndexOf[T <: Tuple, X] = T match
     case EmptyTuple => -1
     case X *: _ => 0

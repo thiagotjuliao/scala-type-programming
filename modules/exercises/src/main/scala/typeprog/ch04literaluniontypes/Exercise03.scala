@@ -33,10 +33,8 @@ object Exercise03:
   def number(key: String, raw: String): Int | Malformed =
     raw.toIntOption.getOrElse(Malformed(key, raw))
 
-  /** TODO: replace `Unsolved` with the port, or each way of not getting one. */
   type PortResult = Int | Missing | Malformed | OutOfRange
 
-  /** TODO: implement. */
   def port(env: Map[String, String]): PortResult =
     lookup(env, "port") match
       case raw: String =>
@@ -46,7 +44,6 @@ object Exercise03:
           case m: Malformed => m
       case m: Missing => m
 
-  /** TODO: implement. */
   def explain(result: PortResult): String =
     result match
       case p: Int => s"port $p"

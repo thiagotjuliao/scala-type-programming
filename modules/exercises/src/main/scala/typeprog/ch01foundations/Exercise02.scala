@@ -20,5 +20,4 @@ object Exercise02:
     type Entity
     def find(id: Id): Option[Entity]
 
-  /** TODO: replace `Unsolved` with the refinement described above. */
   type DogRepo = Repo { type Id = Long; type Entity = Dog }

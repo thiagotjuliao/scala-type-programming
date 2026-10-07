@@ -63,11 +63,9 @@ object Exercise03:
     def pure[A](a: A): F[A]
     def map2[A, B, C](fa: F[A], fb: F[B])(f: (A, B) => C): F[C]
 
-    /** TODO: implement, from `pure` and `map2` only. */
     def map[A, B](fa: F[A])(f: A => B): F[B] =
       map2(fa, pure(f))((a, f) => f(a))
 
-  /** TODO: the instances. */
   object Applicative:
     given Applicative[Option] = new Applicative[Option]:
       override def pure[A](a: A): Option[A] = Option(a)

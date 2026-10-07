@@ -22,7 +22,6 @@ package typeprog.ch03pathdependenttypes
   */
 object Exercise01:
 
-  /** TODO: every graph should have its own. */
 
   final class Graph:
     final class Node(val label: String)
@@ -33,6 +32,5 @@ object Exercise01:
     def connect(from: Node, to: Node): Unit = edges += from -> to
     def connected(from: Node, to: Node): Boolean = edges(from -> to)
 
-  /** TODO: the parameter types, and the body. */
   def link(g: Graph)(a: g.Node, b: g.Node): Unit =
     g.connect(a, b)

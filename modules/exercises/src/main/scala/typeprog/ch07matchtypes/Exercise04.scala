@@ -49,11 +49,9 @@ object Exercise04:
     def +(other: Quantity[U]): Quantity[U] = q + other
     def per[V](other: Quantity[V]): Quantity[U / V] = q / other
 
-    /** TODO: the body. */
     def *[V](other: Quantity[V]): Quantity[Times[U, V]] =
       q * other
 
-  /** TODO: replace `Unsolved` with the unit of a product. */
   type Times[U, V] = (U, V) match
     case (a / b, c) =>
       c match

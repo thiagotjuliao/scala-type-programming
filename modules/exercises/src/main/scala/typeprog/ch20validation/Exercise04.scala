@@ -70,7 +70,6 @@ object Exercise04:
         case (Invalid(e), _) => Invalid(e)
         case (_, Invalid(e)) => Invalid(e)
 
-  /** TODO: implement. */
   def traverse[F[_]: Applicative, A, B](as: List[A])(f: A => F[B]): F[List[B]] =
     val ev = summon[Applicative[F]]
 
@@ -90,7 +89,6 @@ object Exercise04:
   def checkEmail(s: String): Checked[String] =
     if s.contains('@') then Valid(s) else Invalid(List("email has no @"))
 
-  /** TODO: implement. */
   def signUp(name: String, age: Int, email: String)(using ev: Applicative[Checked]): Checked[User] =
     ev.map2(
       ev.map2(checkName(name), checkAge(age))((a, b) => (a, b)),
@@ -98,7 +96,6 @@ object Exercise04:
     ):
       case ((a, b), c) => User(a, b, c)
 
-  /** TODO: implement. */
   def signUpAll(forms: List[(String, Int, String)])(using
       Applicative[Checked]
   ): Checked[List[User]] =

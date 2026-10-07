@@ -18,7 +18,6 @@ package typeprog.ch07matchtypes
   */
 object Exercise01:
 
-  /** TODO: replace `Unsolved` with a match type. */
   type Unwrap[X] = X match
     case Option[a] => a
     case Either[?, a] => a

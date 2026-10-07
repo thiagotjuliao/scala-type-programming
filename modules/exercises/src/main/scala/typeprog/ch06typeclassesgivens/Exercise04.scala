@@ -41,7 +41,6 @@ object Exercise04:
       type Out = O
       def apply(a: A, b: B): O = f(a, b)
 
-    // TODO: the instances.
     given Aux[Int, Int, Int] = Add.instance(_ + _)
     given Aux[Int, Double, Double] = Add.instance(_.toDouble + _)
     given Aux[Double, Int, Double] = Add.instance(_ + _.toDouble)
@@ -54,6 +53,5 @@ object Exercise04:
     ) => Aux[(A, B), (C, D), (O1, O2)] = Add.instance:
       case ((a, b), (c, d)) => (first(a, c), second(b, d))
 
-  /** TODO: the signature, and the body. */
   def add[A, B](a: A, b: B)(using ev: Add[A, B]): ev.Out = ev(a, b)
 end Exercise04

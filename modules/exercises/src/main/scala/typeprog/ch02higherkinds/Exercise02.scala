@@ -20,10 +20,8 @@ package typeprog.ch02higherkinds
   */
 object Exercise02:
 
-  /** TODO: replace `Unsolved` with `Either`, `E` on the left. */
   type ErrorOr[E] = [X] =>> Either[E, X]
 
-  /** TODO: implement. */
   def eitherFunctor[E]: Functor[ErrorOr[E]] = new Functor[ErrorOr[E]]:
     def map[A, B](fa: ErrorOr[E][A])(f: A => B): ErrorOr[E][B] =
       fa match

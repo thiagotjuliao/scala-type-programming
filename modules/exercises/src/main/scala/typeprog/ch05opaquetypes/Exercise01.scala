@@ -21,14 +21,12 @@ package typeprog.ch05opaquetypes
   */
 object Exercise01:
 
-  /** TODO: make it stop being a `String` outside this object. */
   opaque type Email = String
 
   private val EmailPattern = "([^@\\s]+)@([^@\\s]+\\.[^@\\s]+)".r
 
   object Email:
 
-    /** TODO: implement. */
     def parse(raw: String): Option[Email] =
       raw match
         case EmailPattern(_, _) => Some(raw)
@@ -36,11 +34,9 @@ object Exercise01:
 
   extension (email: Email)
 
-    /** TODO: implement. */
     def domain: String =
       email match
         case EmailPattern(_, domain) => domain
 
-    /** TODO: implement. */
     def value: String = email
 end Exercise01

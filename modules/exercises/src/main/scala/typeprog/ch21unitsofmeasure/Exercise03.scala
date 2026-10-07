@@ -69,27 +69,21 @@ object Exercise03:
 
   export units.*
 
-  /** TODO: m/s. */
   type Velocity = Div[Metre, Second]
 
-  /** TODO: m/s². */
   type Acceleration = Div[Metre, Mul[Second, Second]]
 
-  /** TODO: joules, kg·m²/s². */
   type Energy = Mul[Kilogram, Mul[Metre, Acceleration]]
 
   def metresPerSecond(d: Double): Quantity[Velocity] = quantity(d)
   def metresPerSecondSquared(d: Double): Quantity[Acceleration] = quantity(d)
 
-  /** TODO: implement. */
   def speed(distance: Quantity[Metre], time: Quantity[Second]): Quantity[Velocity] =
     distance / time
 
-  /** TODO: implement, ½·m·v². */
   def kineticEnergy(mass: Quantity[Kilogram], speed: Quantity[Velocity]): Quantity[Energy] =
     (mass * speed * speed).scale(0.5)
 
-  /** TODO: implement, √(2h / g). */
   def fallTime(height: Quantity[Metre], gravity: Quantity[Acceleration]): Quantity[Second] =
     sqrt((height / gravity).scale(2.0))
 end Exercise03

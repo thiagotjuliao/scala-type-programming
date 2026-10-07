@@ -25,13 +25,11 @@ object Exercise01:
     case Valid(value: A)
     case Invalid(errors: E)
 
-    /** TODO: implement. */
     def map[B](f: A => B): Validated[E, B] =
       this match
         case Valid(a) => Valid(f(a))
         case Invalid(e) => Invalid(e)
 
-    /** TODO: implement. */
     def fold[C](onInvalid: E => C, onValid: A => C): C =
       this match
         case Valid(a) => onValid(a)

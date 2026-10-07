@@ -19,10 +19,8 @@ import scala.deriving.Mirror
   */
 object Exercise04:
 
-  /** TODO: exactly `T`'s fields, and the `T` they make. */
   def build[T](using m: Mirror.ProductOf[T])(fields: m.MirroredElemTypes): T =
     m.fromProduct(fields)
 
-  /** TODO: the tuple of `t`'s fields, typed. */
   def fields[T](t: T)(using m: Mirror.ProductOf[T]): m.MirroredElemTypes =
     Tuple.fromProduct(t.asInstanceOf[Product]).asInstanceOf[m.MirroredElemTypes]

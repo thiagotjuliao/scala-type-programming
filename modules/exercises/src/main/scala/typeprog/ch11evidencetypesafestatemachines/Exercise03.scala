@@ -29,15 +29,12 @@ object Exercise03:
       method: String
   ):
 
-    /** TODO: once only. */
     def url(u: String)(using HasUrl =:= false): RequestBuilder[true, HasMethod] =
       new RequestBuilder[true, HasMethod](u, method)
 
-    /** TODO: once only. */
     def method(m: String)(using HasMethod =:= false): RequestBuilder[HasUrl, true] =
       new RequestBuilder[HasUrl, true](url, m)
 
-    /** TODO: only with both set, saying which one is missing. */
 
     def build(using
         HasUrl =:= true @implicitNotFound("no URL"),

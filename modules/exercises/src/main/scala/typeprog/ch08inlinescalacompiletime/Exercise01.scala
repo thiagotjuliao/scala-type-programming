@@ -27,7 +27,6 @@ object Exercise01:
   opaque type Port = Int
 
   object Port:
-    /** TODO: the port numbered `N`, or a compile error. */
     inline def apply[N <: Int]: Port =
       val portNumber = constValue[N]
       inline if portNumber >= 1 && portNumber <= 65535 then portNumber

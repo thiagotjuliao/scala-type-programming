@@ -20,11 +20,8 @@ package typeprog.ch03pathdependenttypes
   */
 object Exercise04:
 
-  /** TODO: its value type is `Int`. */
   val port: Key.Aux[Int] = Key[Int]("port")(_.toIntOption)
 
-  /** TODO: its value type is `String`. */
   val host: Key.Aux[String] = Key[String]("host")(Some(_))
 
-  /** TODO: a key made here should keep `V`. */
   def keyOf[V](name: String)(parse: String => Option[V]): Key.Aux[V] = Key[V](name)(parse)

@@ -22,13 +22,11 @@ package typeprog.ch07matchtypes
   */
 object Exercise03:
 
-  /** TODO: replace `Unsolved` with a match type. */
   type First[X] = X match
     case String => Option[Char]
     case List[a] => Option[a]
     case Option[a] => Option[a]
 
-  /** TODO: the signature keeps anything else out; the body is a `match`. */
   def first[X <: String | List[?] | Option[?]](x: X): First[X] = x match
     case s: String => s.headOption
     case ls: List[?] => ls.headOption

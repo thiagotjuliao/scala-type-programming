@@ -44,7 +44,6 @@ object Exercise02:
   type Div[A <: Dim, B <: Dim] <: Dim = (A, B) match
     case ((m1, s1, k1), (m2, s2, k2)) => (m1 - m2, s1 - s2, k1 - k2)
 
-  /** TODO: every exponent halved. */
   type Half[U <: Dim] <: Dim = U match
     case (m, s, k) =>
       (m % 2, s % 2, k % 2) match
@@ -58,6 +57,5 @@ object Exercise02:
     def *[V <: Dim](r: Quantity[V]): Quantity[Mul[U, V]] = q * r
     def /[V <: Dim](r: Quantity[V]): Quantity[Div[U, V]] = q / r
 
-    /** TODO: implement, for units with every exponent even. */
     def sqrt(using U =:= Mul[Half[U], Half[U]]): Quantity[Half[U]] = Math.sqrt(q)
 end Exercise02
