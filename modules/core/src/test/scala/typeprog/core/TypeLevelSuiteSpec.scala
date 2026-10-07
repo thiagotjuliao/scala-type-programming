@@ -35,6 +35,16 @@ class TypeLevelSuiteSpec extends TypeLevelSuite:
       assertTypeErrorContains("rejectedAtTheCallSite()", "a reason nobody gave")
     )
   }
+
+  test("a rejection can be pinned to how its message opens") {
+    assertTypeErrorStartsWith("val n: Int = \"not a number\"", "Found:")
+  }
+
+  test("text further into the message does not open it") {
+    intercept[munit.FailException](
+      assertTypeErrorStartsWith("val n: Int = \"not a number\"", "Required:")
+    )
+  }
 end TypeLevelSuiteSpec
 
 inline def rejectedAtTheCallSite(): Int = scala.compiletime.error("rejected")

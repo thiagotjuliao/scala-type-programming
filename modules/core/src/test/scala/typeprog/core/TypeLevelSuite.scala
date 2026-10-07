@@ -62,4 +62,24 @@ abstract class TypeLevelSuite extends FunSuite:
         s"the snippet was rejected, but not for the expected reason.\n" +
           s"expected the error to mention: $fragment\ngot:\n$errors"
       )
+
+  /** Asserts that the snippet is rejected with a message that *opens* with the
+    * given text.
+    *
+    * For a message that is the whole design, such as an `@implicitNotFound`:
+    * [[assertTypeErrorContains]] also passes when the text only appears inside
+    * the compiler's own message — an annotation on the wrong type is printed
+    * in *"Cannot prove that ..."*, and the fragment is found there.
+    */
+  inline def assertTypeErrorStartsWith(inline code: String, inline prefix: String)(using
+      Location
+  ): Unit =
+    val rejections = typeCheckErrors(code)
+    val errors = compileErrors(code)
+    if rejections.isEmpty then fail(s"expected this to be rejected, but it compiled:\n  $code")
+    else if !rejections.exists(_.message.startsWith(prefix)) then
+      fail(
+        s"the snippet was rejected, but its message does not open as expected.\n" +
+          s"expected the error to start with: $prefix\ngot:\n$errors"
+      )
 end TypeLevelSuite
