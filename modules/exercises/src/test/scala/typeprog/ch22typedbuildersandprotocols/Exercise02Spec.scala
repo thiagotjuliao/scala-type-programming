@@ -26,9 +26,9 @@ class Exercise02Spec extends TypeLevelSuite:
   }
 
   test("and not without one, saying why") {
-    assertTypeErrorContains("Builder().set(\"name\")(\"Ada\").build", "cannot build a User")
-    assertTypeErrorContains("Builder().set(\"age\")(36).build", "cannot build a User")
-    assertTypeErrorContains("Builder().build", "cannot build a User")
+    assertTypeErrorStartsWith("Builder().set(\"name\")(\"Ada\").build", "cannot build a User")
+    assertTypeErrorStartsWith("Builder().set(\"age\")(36).build", "cannot build a User")
+    assertTypeErrorStartsWith("Builder().build", "cannot build a User")
   }
 
   test("build makes the user, with the age when it was set") {
