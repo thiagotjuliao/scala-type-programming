@@ -51,13 +51,14 @@ object Exercise02:
           .filter(row => filters.forall((name, value) => row(name) == value))
           .map(row => Tuple.fromArray(names(columns).map(row).toArray).asInstanceOf[Values[Cs]])
 
-      /** TODO: only one of this table's columns, and a value of its type. */
-      def where(column: Any)(value: Any): Query[Cs] =
+      def where[N <: String & Singleton, A](column: Column[N, A])(
+          value: A
+      ): Query[Cs] =
         Query(columns, filters :+ (column.asInstanceOf[Column[?, ?]].name -> value))
     end Query
 
-    /** TODO: only this table's columns. */
-    def select[Cs <: Tuple](columns: Cs): Query[Cs] = Query(columns, Nil)
+    def select[Cs <: Tuple](columns: Cs)(using Tuple.Union[Cs] <:< Column[?, ?]): Query[Cs] =
+      Query(columns, Nil)
 
     private def names(columns: Tuple): List[String] =
       columns.toList.map(_.asInstanceOf[Column[?, ?]].name)

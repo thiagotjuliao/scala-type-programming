@@ -34,11 +34,12 @@ object Exercise01:
 
     protected def column[N <: String & Singleton, A](name: N): Column[N, A] = Column(name)
 
-    /** TODO: the type of the column type `C`'s values. */
-    type Value[C] = Any
+    type Value[C] = C match
+      case Column[?, a] => a
 
-    /** TODO: the row type of the columns `Cs`. */
-    type Values[Cs <: Tuple] = Tuple
+    type Values[Cs <: Tuple] = Cs match
+      case EmptyTuple => EmptyTuple
+      case h *: t => Value[h] *: Values[t]
 
     final class Query[Cs <: Tuple] private[Table] (val columns: Cs):
 

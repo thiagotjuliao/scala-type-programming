@@ -1,5 +1,7 @@
 package typeprog.ch23typedquerybuilder
 
+import compiletime.ops.int.*
+
 /** Exercise 03 — read a row by its column.
   *
   * `run` now returns `Row`s. A row holds the selected values as a tuple, in
@@ -24,8 +26,9 @@ package typeprog.ch23typedquerybuilder
   */
 object Exercise03:
 
-  /** TODO: the position of `X` in `T`. */
-  type IndexOf[T <: Tuple, X] = Int
+  type IndexOf[T <: Tuple, X] <: Int = T match
+    case X *: _ => 0
+    case _ *: t => 1 + IndexOf[t, X]
 
   abstract class Table(val tableName: String):
 
@@ -40,8 +43,10 @@ object Exercise03:
 
     final class Row[Cs <: Tuple] private[Table] (val values: Values[Cs]):
 
-      /** TODO: only a selected column, read at its own position. */
-      def apply(column: Column[?, ?]): Any = ???
+      def apply[S <: String & Singleton, A](column: Column[S, A])(using
+          v: ValueOf[IndexOf[Cs, Column[S, A]]]
+      ): A =
+        values.productElement(v.value).asInstanceOf[A]
 
     final class Query[Cs <: Tuple] private[Table] (val columns: Cs):
 
