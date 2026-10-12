@@ -70,7 +70,6 @@ object Exercise03:
         case _: (EmptyTuple, EmptyTuple) => Nil
         case _: (h *: ts, l *: ls) => instance[T, h, l] :: instances[T, ts, ls]
 
-    /** TODO: the error, when there is nothing to use. */
     inline def instance[T <: String, H, L]: Encoder[Any] = summonFrom {
       case e: Encoder[H] => e.asInstanceOf[Encoder[Any]]
       case m: Mirror.Of[H] => derived[H](using m).asInstanceOf[Encoder[Any]]
