@@ -56,3 +56,4 @@ where the term is introduced, not everywhere it appears.
 | **session type** | a protocol as a type: which message comes next is part of the channel's type | 22 |
 | **typed column** | a column whose type carries its name and its values' type, so a query's row type can be computed from its columns | 23 |
 | **discriminator** | the entry that names a sum's case in its encoding, `"type"` here, so a decoder knows which case to read | 24 |
+| **interpolator** | a method on `StringContext`, called by `x"..."` with the literal split at its holes into parts and the holes' values as arguments | 25 |
