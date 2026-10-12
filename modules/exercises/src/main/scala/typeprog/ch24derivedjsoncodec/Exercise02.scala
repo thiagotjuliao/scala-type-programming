@@ -1,6 +1,7 @@
 package typeprog.ch24derivedjsoncodec
 
-import scala.deriving.Mirror
+import scala.deriving.*
+import scala.compiletime.*
 
 /** Exercise 02 — derive a `Decoder`, the way back.
   *
@@ -31,6 +32,11 @@ import scala.deriving.Mirror
   * `Tuple.fromArray` builds that tuple.
   */
 object Exercise02:
+  extension [E, A](either: Either[E, A])
+    def leftMap[E2](f: E => E2): Either[E2, A] =
+      either match
+        case Left(e) => Left(f(e))
+        case Right(v) => Right(v)
 
   enum Json:
     case JNull
@@ -65,7 +71,69 @@ object Exercise02:
       case Json.JNull => Right(None)
       case json => d.decode(json).map(Some(_))
 
-    /** TODO: a decoder for any case class or enum. */
-    inline def derived[A](using m: Mirror.Of[A]): Decoder[A] = ???
+    inline def instance[A]: Decoder[A] = summonFrom {
+      case d: Decoder[A] => d
+      case m: Mirror.Of[A] => derived(using m)
+    }
+
+    inline def instances[Ts <: Tuple]: List[Decoder[Any]] =
+      inline erasedValue[Ts] match
+        case EmptyTuple => Nil
+        case _: (h *: t) => instance[h].asInstanceOf[Decoder[Any]] :: instances[t]
+
+    def field(fields: Map[String, Json], label: String, d: Decoder[Any]): Either[DecodeError, Any] =
+      fields.get(label) match
+        case Some(j) => d.decode(j).leftMap(e => DecodeError(label :: e.path, e.message))
+        case None => d.decode(Json.JNull).leftMap(_ => DecodeError(List(label), "missing"))
+
+    def decodeProduct[A](
+        m: Mirror.ProductOf[A],
+        names: List[String],
+        decoders: => List[Decoder[Any]]
+    ): Decoder[A] =
+      lazy val decs = decoders
+
+      json =>
+        json match
+          case Json.JObject(fields) =>
+            names
+              .zip(decs)
+              .foldRight[Either[DecodeError, List[Any]]](Right(Nil)):
+                case ((label, d), rest) =>
+                  for
+                    value <- field(fields.toMap, label, d)
+                    values <- rest
+                  yield value :: values
+              .map(as => m.fromProduct(Tuple.fromArray(as.toArray)))
+
+          case _ => Left(DecodeError(Nil, "expected an object"))
+
+    def decodeSum[A](
+        m: Mirror.SumOf[A],
+        names: List[String],
+        decoders: => List[Decoder[Any]]
+    ): Decoder[A] =
+      lazy val decs = decoders
+
+      json =>
+        json match
+          case Json.JObject(fields) =>
+            fields.filter(_._1 == "type") match
+              case (tpe -> Json.JString(name)) :: _ =>
+                val i = names.indexOf(name)
+
+                if i >= 0 then decs(i).decode(json).map(_.asInstanceOf[A])
+                else Left(DecodeError(List("type"), s"unknown case $name"))
+
+              case _ => Left(DecodeError(List("type"), "missing"))
+          case _ => Left(DecodeError(Nil, "expected an object"))
+
+    inline def derived[A](using m: Mirror.Of[A]): Decoder[A] =
+      val names = constValueTuple[m.MirroredElemLabels].toList.map(_.toString)
+      lazy val decoders = instances[m.MirroredElemTypes]
+
+      inline m match
+        case p: Mirror.ProductOf[A] => decodeProduct(p, names, decoders)
+        case s: Mirror.SumOf[A] => decodeSum(s, names, decoders)
   end Decoder
 end Exercise02

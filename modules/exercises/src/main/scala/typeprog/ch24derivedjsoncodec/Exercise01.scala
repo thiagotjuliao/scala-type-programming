@@ -1,6 +1,9 @@
 package typeprog.ch24derivedjsoncodec
 
 import scala.deriving.Mirror
+import scala.compiletime.*
+import typeprog.ch24derivedjsoncodec.Exercise01.Json.JObject
+import typeprog.ch24derivedjsoncodec.Exercise01.Json.JString
 
 /** Exercise 01 — derive an `Encoder` for case classes and enums.
   *
@@ -51,7 +54,53 @@ object Exercise01:
     given [A] => (e: Encoder[A]) => Encoder[Option[A]] = _.fold(Json.JNull)(e.encode)
     given [A] => (e: Encoder[A]) => Encoder[List[A]] = as => Json.JArray(as.map(e.encode))
 
-    /** TODO: an encoder for any case class or enum. */
-    inline def derived[A](using m: Mirror.Of[A]): Encoder[A] = ???
+    inline def instance[H]: Encoder[H] = summonFrom {
+      case e: Encoder[H] => e
+      case m: Mirror.Of[H] => derived[H](using m)
+    }
+
+    inline def instances[Ts <: Tuple]: List[Encoder[Any]] =
+      inline erasedValue[Ts] match
+        case _: EmptyTuple => Nil
+        case _: (h *: t) =>
+          instance[h].asInstanceOf[Encoder[Any]] :: instances[t]
+
+    def encoderProduct[A](
+        m: Mirror.ProductOf[A],
+        labels: List[String],
+        encoders: => List[Encoder[Any]]
+    ): Encoder[A] =
+      lazy val encs = encoders
+
+      a =>
+        val values = a.asInstanceOf[Product].productIterator.toList
+        val fields = (values lazyZip labels lazyZip encs).map:
+          case (v, f, e) => f -> e.encode(v)
+        JObject(fields)
+
+    def encoderSum[A](
+        m: Mirror.SumOf[A],
+        labels: List[String],
+        encoders: => List[Encoder[Any]]
+    ): Encoder[A] =
+      lazy val encs = encoders
+
+      a =>
+        val i = m.ordinal(a)
+        val label = labels(i)
+        val enc = encs(i)
+        val typeLabel = "type" -> JString(label)
+
+        enc.encode(a) match
+          case JObject(fields) => JObject(typeLabel :: fields)
+          case other => other
+
+    inline def derived[A](using m: Mirror.Of[A]): Encoder[A] =
+      val labels = constValueTuple[m.MirroredElemLabels].toList.map(_.toString)
+      lazy val encoders = instances[m.MirroredElemTypes]
+
+      inline m match
+        case m: Mirror.ProductOf[A] => encoderProduct(m, labels, encoders)
+        case m: Mirror.SumOf[A] => encoderSum(m, labels, encoders)
   end Encoder
 end Exercise01

@@ -1,7 +1,8 @@
 package typeprog.ch24derivedjsoncodec
 
-import scala.compiletime.{constValueTuple, erasedValue, summonFrom}
+import scala.compiletime.*
 import scala.deriving.Mirror
+import scala.annotation.implicitNotFound
 
 /** Exercise 03 — say what cannot be encoded, and where.
   *
@@ -35,7 +36,7 @@ object Exercise03:
     case JArray(items: List[Json])
     case JObject(fields: List[(String, Json)])
 
-  /** TODO: a message for a plain search that finds nothing. */
+  @implicitNotFound("no Encoder for ${A}")
   trait Encoder[A]:
     def encode(a: A): Json
 
@@ -50,22 +51,34 @@ object Exercise03:
 
     inline def derived[A](using m: Mirror.Of[A]): Encoder[A] = inline m match
       case p: Mirror.ProductOf[A] =>
-        product(labels[p.MirroredElemLabels], instances[p.MirroredElemTypes])
+        product(
+          labels[p.MirroredElemLabels],
+          instances[p.MirroredLabel, p.MirroredElemTypes, p.MirroredElemLabels]
+        )
       case s: Mirror.SumOf[A] =>
-        sum(s, labels[s.MirroredElemLabels], instances[s.MirroredElemTypes])
+        sum(
+          s,
+          labels[s.MirroredElemLabels],
+          instances[s.MirroredLabel, s.MirroredElemTypes, s.MirroredElemLabels]
+        )
 
     inline def labels[Ls <: Tuple]: List[String] =
       constValueTuple[Ls].toList.asInstanceOf[List[String]]
 
-    /** TODO: a type and a field to name, when an instance cannot be found. */
-    inline def instances[Ts <: Tuple]: List[Encoder[Any]] = inline erasedValue[Ts] match
-      case _: EmptyTuple => Nil
-      case _: (h *: ts) => instance[h] :: instances[ts]
+    inline def instances[T <: String, Ts <: Tuple, Ls <: Tuple]: List[Encoder[Any]] =
+      inline erasedValue[(Ts, Ls)] match
+        case _: (EmptyTuple, EmptyTuple) => Nil
+        case _: (h *: ts, l *: ls) => instance[T, h, l] :: instances[T, ts, ls]
 
     /** TODO: the error, when there is nothing to use. */
-    inline def instance[H]: Encoder[Any] = summonFrom {
+    inline def instance[T <: String, H, L]: Encoder[Any] = summonFrom {
       case e: Encoder[H] => e.asInstanceOf[Encoder[Any]]
       case m: Mirror.Of[H] => derived[H](using m).asInstanceOf[Encoder[Any]]
+      case _ =>
+        error(
+          "cannot derive Encoder for " + constValue[T] + ": field " +
+            constValue[L] + " has no Encoder"
+        )
     }
 
     def product[A](labels: List[String], encoders: => List[Encoder[Any]]): Encoder[A] =
