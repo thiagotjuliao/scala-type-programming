@@ -85,8 +85,19 @@ object Exercise03:
                 val name = TypeRepr.of[w].show(using Printer.TypeReprShortCode)
                 report.errorAndAbort(s"no Encoder for $name", arg)
 
-  /** TODO: an argument as a key — a `String`, or an error that names its type. */
-  private def key(k: Key, args: Seq[Expr[Any]])(using Quotes): Expr[String] = k match
-    case Key.Name(name) => Expr(name)
-    case Key.Arg(_) => '{ ??? }
+  private def key(k: Key, args: Seq[Expr[Any]])(using Quotes): Expr[String] =
+    import quotes.reflect.*
+
+    k match
+      case Key.Name(name) => Expr(name)
+      case Key.Arg(i) =>
+        args(i) match
+          case '{ $s: String } => s
+          case '{ $a: t } =>
+            val name = TypeRepr.of[t].widen.show(using Printer.TypeReprShortCode)
+            report.errorAndAbort(
+              s"a key must be a String, not $name",
+              a
+            )
+
 end Exercise03

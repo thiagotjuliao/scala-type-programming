@@ -1,6 +1,7 @@
 package typeprog.ch25macrocheckedinterpolator
 
 import scala.quoted.*
+import JsonTemplate.{Key, Tpl, ParseError}
 
 /** Exercise 01 — JSON, read while compiling.
   *
@@ -36,6 +37,40 @@ object Exercise01:
   extension (inline sc: StringContext)
     inline def json(inline args: Any*): Json = ${ jsonImpl('sc, 'args) }
 
-  /** TODO: read the parts, parse them, and build the `Json` they describe. */
-  def jsonImpl(sc: Expr[StringContext], args: Expr[Seq[Any]])(using Quotes): Expr[Json] = '{ ??? }
+  private def build(tpl: Tpl, args: Seq[Expr[Any]])(using Quotes): Expr[Json] =
+    import quotes.reflect.*
+
+    tpl match
+      case Tpl.Null => '{ Json.JNull }
+      case Tpl.Bool(b) => '{ Json.JBool(${ Expr(b) }) }
+      case Tpl.Number(n) => '{ Json.JNumber(${ Expr(n) }) }
+      case Tpl.Str(s) => '{ Json.JString(${ Expr(s) }) }
+      case Tpl.Arr(ls) => '{ Json.JArray(${ Expr.ofList(ls.map(tpl => build(tpl, args))) }) }
+      case Tpl.Obj(fs) =>
+        val fs_ = fs.map:
+          case Key.Name(n) -> tpl => '{ (${ Expr(n) }, ${ build(tpl, args) }) }
+          case Key.Arg(i) -> _ =>
+            report.errorAndAbort("json does not take arguments yet", args(i))
+        '{ Json.JObject(${ Expr.ofList(fs_) }) }
+      case Tpl.Arg(i) =>
+        report.errorAndAbort("json does not take arguments yet", args(i))
+
+  def jsonImpl(sc: Expr[StringContext], args: Expr[Seq[Any]])(using Quotes): Expr[Json] =
+    import quotes.reflect.*
+
+    sc match
+      case '{ StringContext(${ Varargs(parts) }*) } =>
+        JsonTemplate.parse(parts.map(_.valueOrAbort).toList) match
+          case Right(tpl) =>
+            args match
+              case Varargs(arguments) => build(tpl, arguments)
+              case _ => report.errorAndAbort("json needs its arguments written out", args)
+          case Left(ParseError(part, offset, message)) =>
+            val pos = parts(part).asTerm.pos
+            report.errorAndAbort(
+              "invalid JSON: " + message,
+              Position(pos.sourceFile, pos.start + offset, pos.start + offset)
+            )
+      case _ => report.errorAndAbort("parts must be written as a literal", sc)
+
 end Exercise01

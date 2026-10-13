@@ -1,6 +1,7 @@
 package typeprog.ch25macrocheckedinterpolator
 
 import scala.quoted.*
+import JsonTemplate.{Key, Tpl, ParseError}
 
 /** Exercise 02 — arguments, encoded by their type.
   *
@@ -44,6 +45,53 @@ object Exercise02:
   extension (inline sc: StringContext)
     inline def json(inline args: Any*): Json = ${ jsonImpl('sc, 'args) }
 
-  /** TODO: exercise 01, with every argument encoded in its place. */
-  def jsonImpl(sc: Expr[StringContext], args: Expr[Seq[Any]])(using Quotes): Expr[Json] = '{ ??? }
+  private def encode(arg: Expr[Any])(using Quotes): Expr[Json] =
+    import quotes.reflect.*
+
+    arg match
+      case '{ $a: t } =>
+        TypeRepr.of[t].widen.asType match
+          case '[w] =>
+            Expr.summon[Encoder[w]] match
+              case Some(encoder) => '{ ${ encoder }.encode(${ a.asExprOf[w] }) }
+              case None =>
+                report.errorAndAbort(
+                  "no Encoder for " + TypeRepr.of[w].show(using Printer.TypeReprShortCode),
+                  arg
+                )
+
+  private def build(tpl: Tpl, args: Seq[Expr[Any]])(using Quotes): Expr[Json] =
+    import quotes.reflect.*
+
+    tpl match
+      case Tpl.Null => '{ Json.JNull }
+      case Tpl.Bool(b) => '{ Json.JBool(${ Expr(b) }) }
+      case Tpl.Number(n) => '{ Json.JNumber(${ Expr(n) }) }
+      case Tpl.Str(s) => '{ Json.JString(${ Expr(s) }) }
+      case Tpl.Arr(ls) => '{ Json.JArray(${ Expr.ofList(ls.map(tpl => build(tpl, args))) }) }
+      case Tpl.Obj(fs) =>
+        val fs_ = fs.map:
+          case Key.Name(n) -> tpl => '{ (${ Expr(n) }, ${ build(tpl, args) }) }
+          case Key.Arg(i) -> _ =>
+            report.errorAndAbort("an argument cannot be a key yet", args(i))
+        '{ Json.JObject(${ Expr.ofList(fs_) }) }
+      case Tpl.Arg(i) => encode(args(i))
+
+  def jsonImpl(sc: Expr[StringContext], args: Expr[Seq[Any]])(using Quotes): Expr[Json] =
+    import quotes.reflect.*
+
+    sc match
+      case '{ StringContext(${ Varargs(parts) }*) } =>
+        JsonTemplate.parse(parts.map(_.valueOrAbort).toList) match
+          case Right(tpl) =>
+            args match
+              case Varargs(arguments) => build(tpl, arguments)
+              case _ => report.errorAndAbort("json needs its arguments written out", args)
+          case Left(ParseError(part, offset, message)) =>
+            val pos = parts(part).asTerm.pos
+            report.errorAndAbort(
+              "invalid JSON: " + message,
+              Position(pos.sourceFile, pos.start + offset, pos.start + offset)
+            )
+      case _ => report.errorAndAbort("parts must be written as a literal", sc)
 end Exercise02
