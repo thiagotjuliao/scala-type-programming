@@ -43,7 +43,7 @@ written.
 | 23 | [Typed query builder](theory/ch23-typed-query-builder.md) | a `select` that only takes the table's columns and returns the matching tuple | 03, 04, 05, 07, 09, 11 | `ch23` |
 | 24 | [Derived JSON codec](theory/ch24-derived-json-codec.md) | `derives Encoder, Decoder`, with a readable compile error for what is not supported | 06, 08, 10 | `ch24` |
 | 25 | [Macro-checked interpolator](theory/ch25-macro-checked-interpolator.md) | `json"..."`, validated and type-checked against its arguments at compile time | 08, 12 | `ch25` |
-| 26 | Typed HTTP API | endpoints as values whose type decides the handler, the router and the client — every chapter, 01 to 12 | 01–12 | |
+| 26 | [Typed HTTP API](theory/ch26-typed-http-api.md) | endpoints as values whose type decides the handler, the router and the client | 01, 03, 04, 06, 07, 08, 09, 10, 12 | `ch26` |
 
 ## Reading one chapter
 
