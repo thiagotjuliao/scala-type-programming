@@ -91,12 +91,23 @@ want while working and useless as a gate, so `verify` uses `testFull`.
 
 Commits your work on chapter 2's exercises as `solutions — chapter 02` and
 pushes it to `my-solutions`, switching to that branch first (or creating it
-from the current one). Only the chapter's exercise sources go into the commit;
-anything else modified is listed and left alone. As with `finish-chapter`, the
-check runs against the staged tree in `target/solve-chapter/`: formatting, and
-every spec of the chapter green. A chapter that is not solved yet is not
-committed. `main` is refused — solutions pushed there would reach every other
-learner along with the next chapter. `--no-push` (`-NoPush`) stops at the commit.
+from the current one). Only the chapter's exercise sources go into the commit,
+with the chapter's notes if you keep them (below); anything else modified is
+listed and left alone. As with `finish-chapter`, the check runs against the
+staged tree in `target/solve-chapter/`: formatting, and every spec of the
+chapter green. A chapter that is not solved yet is not committed. `main` is
+refused — solutions pushed there would reach every other learner along with the
+next chapter. `--no-push` (`-NoPush`) stops at the commit.
+
+### Keeping notes
+
+The theory document and the solutions' scaladoc say what the chapter teaches;
+neither says what *you* learned, or where you got stuck on the way. Keep that in
+`notes/chNN.md`, one file per chapter, on your solutions branch — a line per
+idea is enough, written when the exercise closes, while the reason still makes
+sense. `solve-chapter` commits the chapter's notes file together with its
+solutions. The course itself never ships a `notes/` directory, so nothing that
+arrives from `main` touches yours.
 
 ## Starting a new chapter
 

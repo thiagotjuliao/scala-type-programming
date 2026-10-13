@@ -7,9 +7,10 @@
 #   --no-push     commits without pushing
 #
 # The learner's side of finish-chapter. What gets committed is your work on the
-# chapter's exercises — modules/exercises/src/main/…/chNN* and nothing else —
-# and it only gets committed once every spec of the chapter is green against
-# exactly that tree. There is no tag: tags mark chapters written, not solved.
+# chapter's exercises — modules/exercises/src/main/…/chNN* — and your notes on
+# it, notes/chNN.md, if there are any; nothing else. It only gets committed once
+# every spec of the chapter is green against exactly that tree. There is no
+# tag: tags mark chapters written, not solved.
 set -euo pipefail
 
 die() { echo "error: $*" >&2; exit 1; }
@@ -100,12 +101,14 @@ verify_staged_tree() {
 # check then fails, the index goes back to exactly how it was found.
 INDEX_BEFORE="$(git write-tree)"
 git add -- "$PKG_DIR"
+NOTES="notes/ch$NN.md"
+if [[ -f "$NOTES" ]]; then git add -- "$NOTES"; fi
 
 others="$(git status --porcelain --untracked-files=all |
-  { grep -v "^[AM]  $PKG_DIR/" || true; } | head -5)"
+  { grep -v -e "^[AM]  $PKG_DIR/" -e "^[AM]  $NOTES\$" || true; } | head -5)"
 if [[ -n "$others" ]]; then
   echo
-  echo "heads up, left out of the commit (only $PKG_DIR/ goes in):"
+  echo "heads up, left out of the commit (only $PKG_DIR/ and $NOTES go in):"
   echo "$others" | sed 's/^/  /'
   echo
 fi
