@@ -10,9 +10,10 @@
 .NOTES
   The bash twin is scripts/solve-chapter.sh. The learner's side of
   finish-chapter: what gets committed is your work on the chapter's exercises —
-  modules/exercises/src/main/…/chNN* and nothing else — and it only gets
-  committed once every spec of the chapter is green against exactly that tree.
-  There is no tag: tags mark chapters written, not solved.
+  modules/exercises/src/main/…/chNN* — and your notes on it, notes/chNN.md, if
+  there are any; nothing else. It only gets committed once every spec of the
+  chapter is green against exactly that tree. There is no tag: tags mark
+  chapters written, not solved.
 #>
 [CmdletBinding()]
 param(
@@ -97,11 +98,15 @@ function Invoke-StagedVerification {
 # check then fails, the index goes back to exactly how it was found.
 $indexBefore = (git write-tree).Trim()
 git add -- $pkgPath
+$notes = "notes/ch$nn.md"
+if (Test-Path $notes) { git add -- $notes }
 
-$others = @(git status --porcelain --untracked-files=all | Where-Object { $_ -notmatch "^[AM]  $([regex]::Escape($pkgPath))/" } | Select-Object -First 5)
+$others = @(git status --porcelain --untracked-files=all | Where-Object {
+    $_ -notmatch "^[AM]  $([regex]::Escape($pkgPath))/" -and $_ -notmatch "^[AM]  $([regex]::Escape($notes))$"
+  } | Select-Object -First 5)
 if ($others.Count -gt 0) {
   Write-Host ''
-  Write-Host "heads up, left out of the commit (only $pkgPath/ goes in):"
+  Write-Host "heads up, left out of the commit (only $pkgPath/ and $notes go in):"
   $others | ForEach-Object { Write-Host "  $_" }
   Write-Host ''
 }
