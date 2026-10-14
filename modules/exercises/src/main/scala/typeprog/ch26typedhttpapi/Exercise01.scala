@@ -37,14 +37,31 @@ object Exercise01:
 
     def /(literal: String): Path[In] = Path(parts :+ literal)
 
-    /** TODO: the path with this capture added — and its type. */
-    def /[A](capture: Capture[A]): Path[Tuple] = Path(parts :+ capture)
+    def /[A](capture: Capture[A]): Path[Tuple.Append[In, A]] = Path(parts :+ capture)
 
-    /** TODO: the path, with the captures' values in place. */
-    def render(in: In): String = ???
+    def render(in: In): String =
+      parts
+        .foldLeft((in.toList, List.empty[String])):
+          case ((v, s), p: String) => (v, p :: s)
+          case (((vh :: vt), s), c: Capture[?]) => (vt, c.show(vh) :: s)
+          case ((Nil, _), c: Capture[?]) =>
+            throw AssertionError("a path has many captures as its tuple has elements")
+        ._2
+        .reverse
+        .mkString("/", "/", "")
 
-    /** TODO: the captures' values, if the path matches. */
-    def parse(path: String): Option[In] = ???
+    def parse(path: String): Option[In] =
+      val segments = path.split("/").filter(_.nonEmpty)
+
+      if !(segments.length == parts.length) then None
+      else
+        parts
+          .zip(segments)
+          .foldLeft(Option(List.empty[Any])):
+            case (Some(ins), (p: String, s)) if p == s => Some(ins)
+            case (Some(ins), (c: Capture[?], s)) => c.read(s).map(_ :: ins)
+            case _ => None
+          .map(ls => Tuple.fromArray(ls.reverse.toArray).asInstanceOf[In])
   end Path
 
   object Path:
