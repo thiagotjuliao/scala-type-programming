@@ -76,11 +76,14 @@ verify_staged_tree() {
   mkdir -p "$VERIFY_DIR"
   git checkout-index --all --prefix="target/solve-chapter/" || return 1
 
-  echo "  sbt scalafmtCheckAll \"exercises/testOnly $SUITE\" ..."
+  echo "  sbt \"scalafmtCheckAll; exercises/testOnly $SUITE\" ..."
   set +e
+  # One argument, the commands joined by `;`: under sbt 2 the launcher runs the
+  # thin client, which joins separate arguments into a single command line
+  # (`scalafmtCheckAll exercises/testOnly ...`, rejected with `Expected '/'`).
   out="$(
     cd "$VERIFY_DIR" &&
-      sbt -batch scalafmtCheckAll "exercises/testOnly $SUITE" 2>&1 |
+      sbt -batch "scalafmtCheckAll; exercises/testOnly $SUITE" 2>&1 |
       sed -e "s/$esc\[[0-9;]*m//g" \
           -e '/[[:space:]]at [A-Za-z_$][A-Za-z0-9_.$]*[.(]/d' \
           -e '/sbt server disconnected/d'
