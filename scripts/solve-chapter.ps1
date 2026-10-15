@@ -72,10 +72,14 @@ function Invoke-StagedVerification {
   git checkout-index --all --prefix='target/solve-chapter/'
   if ($LASTEXITCODE -ne 0) { return $false }
 
-  Write-Host "  sbt scalafmtCheckAll ""exercises/testOnly $suite"" ..."
+  Write-Host "  sbt ""scalafmtCheckAll; exercises/testOnly $suite"" ..."
   Push-Location $verifyDir
   try {
-    $out = @(sbt -batch scalafmtCheckAll "exercises/testOnly $suite" 2>&1 |
+    # One argument, the commands joined by `;`: under sbt 2 the launcher runs
+    # the thin client, which joins separate arguments into a single command
+    # line (`scalafmtCheckAll exercises/testOnly ...`, rejected with
+    # `Expected '/'`).
+    $out = @(sbt -batch "scalafmtCheckAll; exercises/testOnly $suite" 2>&1 |
       # munit colours its stack traces, and a colour code in front of `at`
       # hides the frame from the filter below — so the colours go first.
       ForEach-Object { "$_" -replace "`e\[[0-9;]*m", '' } |
