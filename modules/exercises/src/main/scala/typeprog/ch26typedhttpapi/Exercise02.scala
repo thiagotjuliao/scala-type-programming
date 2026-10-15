@@ -1,7 +1,5 @@
 package typeprog.ch26typedhttpapi
 
-import typeprog.core.Unsolved
-
 /** Exercise 02 — the endpoint decides the handler's type.
   *
   * Exercise 01's paths are given, solved. An `Endpoint` pairs a method and a
@@ -76,8 +74,10 @@ object Exercise02:
   // Exercise 02.
   // ---------------------------------------------------------------------------
 
-  /** TODO: what a handler receives for a path that captures `In`. */
-  type Args[In <: Tuple] = Unsolved
+  type Args[In <: Tuple] = In match
+    case EmptyTuple => Unit
+    case t *: EmptyTuple => t
+    case a *: b => a *: b
 
   trait Endpoint:
     type In <: Tuple
@@ -86,8 +86,17 @@ object Exercise02:
     def path: Path[In]
     def codec: Codec[Out]
 
-    /** TODO: a route that answers with `f`, typed by this endpoint. */
-    def handle(f: Nothing => Any): Route = ???
+    def toArgs(in: In): Args[In] =
+      val res = in match
+        case EmptyTuple => ()
+        case a *: EmptyTuple => a
+        case other => other
+      res.asInstanceOf[Args[In]]
+
+    def handle(f: Args[In] => Out): Route = Route(
+      method = method,
+      run = url => path.parse(url).map(in => codec.encode(f(toArgs(in))))
+    )
 
   object Endpoint:
     type Aux[I <: Tuple, O] = Endpoint { type In = I; type Out = O }

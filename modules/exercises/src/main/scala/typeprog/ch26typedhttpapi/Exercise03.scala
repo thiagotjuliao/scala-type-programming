@@ -130,6 +130,19 @@ object Exercise03:
 
   final class Client(server: Request => Response):
 
-    /** TODO: call `e` on the server, typed by `e`. */
-    def call(e: Endpoint)(args: Any): Either[String, Any] = ???
+    def call(e: Endpoint)(args: Args[e.In]): Either[String, e.Out] =
+      def tuple(path: Path[e.In], args: Args[e.In]): e.In =
+        val res = path.parts.filter(_.isInstanceOf[Capture[?]]) match
+          case Nil => EmptyTuple
+          case _ :: Nil => args *: EmptyTuple
+          case _ => args
+        res.asInstanceOf[e.In]
+
+      val path = e.path
+      val url = path.render(tuple(path, args))
+      val request = Request(e.method, url)
+      val response = server(request)
+
+      if response.status != 200 then Left(s"${response.status} ${response.body}")
+      else e.codec.decode(response.body).toRight(s"cannot read the body: ${response.body}")
 end Exercise03

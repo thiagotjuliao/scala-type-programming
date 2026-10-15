@@ -83,7 +83,65 @@ object Exercise04:
   extension (inline sc: StringContext)
     transparent inline def path(inline args: Any*): Path[?] = ${ pathImpl('sc, 'args) }
 
-  /** TODO: check the path, and build it with `/`. */
   def pathImpl(sc: Expr[StringContext], args: Expr[Seq[Any]])(using Quotes): Expr[Path[?]] =
-    '{ Path.root.asInstanceOf[Path[Tuple]] }
+    import quotes.reflect.*
+
+    val texts = sc match
+      case '{ StringContext(${ Varargs(parts) }*) } =>
+        Expr.ofList(parts).valueOrAbort
+      case _ =>
+        report.errorAndAbort(
+          "path reads its parts while compiling: write them as a literal, path\"...\"",
+          sc
+        )
+
+    val arguments = args match
+      case Varargs(as) => as
+      case _ => report.errorAndAbort("path needs its arguments written out", args)
+
+    // Validations
+    if texts.isEmpty || !texts.head.startsWith("/") then
+      report.errorAndAbort("a path starts with /", sc)
+
+    if texts.find(_.contains("//")).isDefined then
+      report.errorAndAbort("a path has no empty segment", sc)
+
+    val validCharSet = (c: Char) => c.isLetterOrDigit || Seq('~', '.', '_', '-').contains(c)
+
+    texts.map(_.split("/")).flatten.find(_.find(!validCharSet(_)).isDefined) match
+      case Some(seg) => report.errorAndAbort(s"invalid segment: '$seg'")
+      case None => ()
+
+    val validArg = (s1: String, s2: String) =>
+      s1.endsWith("/") && (s2.startsWith("/") || s2.isEmpty)
+
+    // texts has at least 1 element so zipping with itself will give at least an empty list, hence not
+    // throwing any errors
+    texts
+      .zip(texts.tail)
+      .zipWithIndex
+      .foreach:
+        case ((s1, s2), i) =>
+          if !validArg(s1, s2) then
+            report.errorAndAbort("a capture must be a whole segment", arguments(i))
+
+    val splitAndFilter: String => List[String] = _.split("/").filterNot(_.isEmpty).toList
+
+    texts
+      .zipAll(arguments.map(Option(_)), "", None)
+      .flatMap[Either[String, Expr[Any]]]:
+        case (s, Some(c)) =>
+          c match
+            case '{ $cap: Capture[a] } =>
+              splitAndFilter(s).map(Left(_)) ++ List(Right(cap))
+            case _ =>
+              val name = c.asTerm.tpe.widen.show(using Printer.TypeReprShortCode)
+              report.errorAndAbort(s"only a Capture can be interpolated, not $name")
+        case (s, None) => splitAndFilter(s).map(Left(_))
+      .foldLeft[Expr[Path[?]]]('{ Path.root }):
+        case ('{ $p: Path[t] }, Left(s)) => '{ $p / ${ Expr(s) } }
+        case ('{ $p: Path[t] }, Right('{ $cap: Capture[a] })) => '{ $p / $cap }
+        case (_, item) =>
+          report.errorAndAbort(s"path: unexpected $item, a bug in the macro, not in the path")
+  end pathImpl
 end Exercise04
