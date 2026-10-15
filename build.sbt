@@ -93,7 +93,7 @@ lazy val root = project
   )
 
 // The release gate, and the only definition of "green" in this repository:
-// everything is formatted, the assertion helpers in core pass their own tests,
+// everything is formatted (the sources and the build files), the assertion helpers in core pass their own tests,
 // the answer key passes, and the exercises still compile.
 // `scripts/finish-chapter.sh` runs exactly this.
 //
@@ -103,7 +103,7 @@ lazy val root = project
 // greenest possible run of it is the one that ran no tests at all.
 addCommandAlias(
   "verify",
-  "scalafmtCheckAll; core/testFull; solutions/testFull; exercises/Test/compile"
+  "scalafmtCheckAll; scalafmtSbtCheck; core/testFull; solutions/testFull; exercises/Test/compile"
 )
 
 // The practice run. Red by design — every unsolved exercise is a failure here,

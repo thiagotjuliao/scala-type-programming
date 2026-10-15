@@ -68,7 +68,7 @@ solved belongs inside a snippet, never in the test body as plain code.
 
 | command | what it does |
 | --- | --- |
-| `sbt verify` | the release gate — `scalafmtCheckAll`, core's own tests, the answer key, and the exercises compiling |
+| `sbt verify` | the release gate — `scalafmtCheckAll`, `scalafmtSbtCheck`, core's own tests, the answer key, and the exercises compiling |
 | `sbt practice` | every exercise spec, red where work remains |
 | `sbt "exercises/testOnly typeprog.ch01foundations.*"` | one chapter's exercises |
 | `sbt "solutions/testOnly typeprog.ch01foundations.*"` | the same, against the answer key |
