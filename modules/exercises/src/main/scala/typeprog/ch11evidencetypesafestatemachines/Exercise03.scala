@@ -35,7 +35,6 @@ object Exercise03:
     def method(m: String)(using HasMethod =:= false): RequestBuilder[HasUrl, true] =
       new RequestBuilder[HasUrl, true](url, m)
 
-
     def build(using
         HasUrl =:= true @implicitNotFound("no URL"),
         HasMethod =:= true @implicitNotFound("no method")

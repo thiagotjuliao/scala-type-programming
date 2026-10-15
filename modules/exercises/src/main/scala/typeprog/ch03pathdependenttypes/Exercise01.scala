@@ -22,7 +22,6 @@ package typeprog.ch03pathdependenttypes
   */
 object Exercise01:
 
-
   final class Graph:
     final class Node(val label: String)
 
